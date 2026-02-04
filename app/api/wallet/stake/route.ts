@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { requireAuth } from '@/lib/auth/middleware';
 
+/**
+ * POST /api/wallet/stake
+ * Stake tokens in a project
+ */
 export async function POST(request: NextRequest) {
   try {
     const authResult = await requireAuth(request);
