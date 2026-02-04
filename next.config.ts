@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Vercel specific optimizations
   output: 'standalone',
+  // Clear TypeScript cache
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 };
 
 export default nextConfig;
