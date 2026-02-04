@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Get reward transactions and sum manually (amount is String in SQLite)
+    // Get reward transactions and sum manually (amount is String in SQLite, cannot use _sum)
     const rewardTransactions = await prisma.transaction.findMany({
       where: {
         userId: user.userId,
