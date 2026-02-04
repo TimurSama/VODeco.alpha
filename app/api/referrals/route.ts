@@ -35,23 +35,29 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const totalRewards = await prisma.transaction.aggregate({
+    // Get reward transactions and sum manually (amount is String in SQLite)
+    const rewardTransactions = await prisma.transaction.findMany({
       where: {
         userId: user.userId,
         type: 'reward',
         description: { contains: 'Referral' },
       },
-      _sum: {
+      select: {
         amount: true,
       },
     });
+
+    const totalRewards = rewardTransactions.reduce(
+      (sum, t) => sum + parseFloat(t.amount),
+      0
+    );
 
     return NextResponse.json({
       code: referral.code,
       link: referral.link,
       status: referral.status,
       totalReferrals,
-      totalRewards: totalRewards._sum.amount || '0',
+      totalRewards: totalRewards.toString(),
       createdAt: referral.createdAt,
     });
   } catch (error) {

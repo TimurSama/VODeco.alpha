@@ -65,16 +65,21 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Get total rewards
-    const totalRewards = await prisma.transaction.aggregate({
+    // Get total rewards (sum manually since amount is String in SQLite)
+    const rewardTransactions = await prisma.transaction.findMany({
       where: {
         userId: user.userId,
         type: 'reward',
       },
-      _sum: {
+      select: {
         amount: true,
       },
     });
+
+    const totalRewards = rewardTransactions.reduce(
+      (sum, t) => sum + parseFloat(t.amount),
+      0
+    );
 
     // Format publications (combine posts and news)
     const publications = [
@@ -139,7 +144,7 @@ export async function GET(request: NextRequest) {
         achievements: userData._count.achievements,
         stakings: userData._count.stakings,
         referrals: usedReferrals,
-        totalRewards: totalRewards._sum.amount || '0',
+        totalRewards: totalRewards.toString(),
       },
     });
   } catch (error) {
