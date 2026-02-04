@@ -1,0 +1,492 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  email             String?  @unique
+  username          String   @unique
+  telegramId       String?  @unique
+  telegramUsername String?
+  firstName        String?
+  lastName         String?
+  avatar           String?
+  bio              String?
+  verified         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  wallet           Wallet?
+  friends          Friendship[] @relation("UserFriends")
+  friendOf         Friendship[] @relation("FriendOf")
+  posts            Post[]
+  comments         Comment[]
+  achievements     UserAchievement[]
+  transactions     Transaction[]
+  stakings         Staking[]
+  chats            ChatMember[]
+  groups           GroupMember[]
+  messages         Message[]
+  newsPosts        NewsPost[]
+  referralsCreated Referral[] @relation("Referrer")
+  referralsUsed    Referral[] @relation("Referred")
+  socialShares     SocialShare[]
+  missionSubmissions MissionSubmission[]
+  level            UserLevel?
+  libraryItems     LibraryItem[]
+  airdropDistributions AirdropDistribution[]
+
+  @@index([username])
+  @@index([telegramId])
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance   String   @default("0") // Decimal stored as string for SQLite
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+  stakings     Staking[]
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  walletId    String
+  wallet      Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // 'transfer', 'staking', 'reward', 'purchase'
+  amount      String   // Decimal stored as string for SQLite
+  status      String   @default("pending") // 'pending', 'completed', 'failed'
+  description String?
+  metadata    String?  // JSON
+  createdAt   DateTime @default(now())
+
+  @@index([walletId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  description     String
+  fullDescription String?
+  type            String   // 'blockchain', 'iot', 'research', 'education', 'infrastructure'
+  status          String   @default("active") // 'active', 'completed', 'paused'
+  targetAmount    String?  // Decimal stored as string for SQLite
+  currentAmount   String   @default("0") // Decimal stored as string for SQLite
+  irr             String?  // Decimal stored as string for SQLite
+  imageUrl        String?
+  location        String?
+  latitude        Float?
+  longitude       Float?
+  metadata        String?  // JSON
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  stakings        Staking[]
+
+  @@index([slug])
+  @@index([type])
+  @@index([status])
+}
+
+model Staking {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId    String
+  wallet      Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  amount      String   // Decimal stored as string for SQLite
+  apy         String?  // Decimal stored as string for SQLite
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  status      String   @default("active") // 'active', 'completed', 'cancelled'
+  rewards     String   @default("0") // Decimal stored as string for SQLite
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([status])
+}
+
+model WaterResource {
+  id            String   @id @default(cuid())
+  name          String
+  type          String   // 'river', 'lake', 'sea', 'ocean', 'glacier', 'underground', 'station', 'treatment', 'organization'
+  category      String   // 'source', 'object', 'subject'
+  latitude      Float
+  longitude     Float
+  country       String?
+  region        String?
+  description   String?
+  qualityIndex  Int?     @default(0)
+  flowRate      Float?
+  capacity      Float?
+  status        String   @default("active")
+  metadata      String?  // JSON - дополнительные данные из API
+  imageUrl      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([type])
+  @@index([category])
+  @@index([latitude, longitude])
+}
+
+model NewsPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  excerpt     String?
+  imageUrl    String?
+  authorId    String?
+  author      User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  source      String?  // Источник новости (RSS, API, admin)
+  sourceUrl   String?
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  views       Int      @default(0)
+  likes       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  comments    Comment[]
+  socialShares SocialShare[]
+
+  @@index([slug])
+  @@index([published])
+  @@index([publishedAt])
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  content     String
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  type        String   @default("post") // 'post', 'news', 'research', 'achievement', 'project_card'
+  imageUrl    String?
+  attachments String?  // JSON: images, videos, audio, files
+  tags        String?  // JSON array
+  location    String?  // Optional location
+  likes       Int      @default(0)
+  comments    Comment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([type])
+}
+
+model Comment {
+  id            String      @id @default(cuid())
+  content       String
+  authorId      String
+  author        User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId        String?
+  post          Post?       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  newsPostId    String?
+  newsPost      NewsPost?   @relation(fields: [newsPostId], references: [id], onDelete: Cascade)
+  libraryItemId String?
+  libraryItem   LibraryItem? @relation(fields: [libraryItemId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([postId])
+  @@index([newsPostId])
+  @@index([libraryItemId])
+}
+
+model Friendship {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friendId    String
+  friend      User     @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+  status      String   @default("pending") // 'pending', 'accepted', 'blocked'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+  @@index([status])
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  icon        String?
+  category    String   // 'social', 'staking', 'environment', 'participation'
+  points      Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  earnedAt      DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+model Chat {
+  id          String       @id @default(cuid())
+  name        String?
+  type        String       @default("private") // 'private', 'group'
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  members     ChatMember[]
+  messages    Message[]
+}
+
+model ChatMember {
+  id          String   @id @default(cuid())
+  chatId      String
+  chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        String   @default("member") // 'admin', 'member'
+  joinedAt    DateTime @default(now())
+
+  @@unique([chatId, userId])
+  @@index([chatId])
+  @@index([userId])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  chatId      String
+  chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  content     String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([chatId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  members     GroupMember[]
+}
+
+model GroupMember {
+  id          String   @id @default(cuid())
+  groupId     String
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        String   @default("member") // 'admin', 'moderator', 'member'
+  joinedAt    DateTime @default(now())
+
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+// Referral System
+model Referral {
+  id            String   @id @default(cuid())
+  referrerId    String
+  referrer      User     @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredId    String?
+  referred      User?    @relation("Referred", fields: [referredId], references: [id], onDelete: SetNull)
+  code          String   @unique
+  link          String   @unique
+  status        String   @default("active") // 'active', 'used', 'expired'
+  rewardAmount  String   @default("0")
+  createdAt     DateTime @default(now())
+  usedAt        DateTime?
+
+  @@index([referrerId])
+  @@index([referredId])
+  @@index([code])
+  @@index([status])
+}
+
+// Social Media Shares
+model SocialShare {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform      String    // 'twitter', 'facebook', 'telegram', 'linkedin', 'instagram', 'vk'
+  postUrl       String
+  newsPostId    String?
+  newsPost      NewsPost? @relation(fields: [newsPostId], references: [id], onDelete: SetNull)
+  verified      Boolean   @default(false)
+  rewardAmount  String    @default("0")
+  rewardStatus  String    @default("pending") // 'pending', 'approved', 'rejected'
+  metadata      String?   // JSON: screenshot, engagement metrics, etc.
+  createdAt     DateTime  @default(now())
+  verifiedAt    DateTime?
+
+  @@index([userId])
+  @@index([platform])
+  @@index([rewardStatus])
+  @@index([createdAt])
+}
+
+// Missions & Tasks
+model Mission {
+  id                  String            @id @default(cuid())
+  title               String
+  description         String
+  type                String            // 'task', 'vacancy', 'partnership', 'news_submission'
+  category            String            // 'development', 'design', 'marketing', 'content', 'research', 'partnership'
+  status              String            @default("active") // 'active', 'completed', 'paused', 'closed'
+  rewardAmount        String
+  rewardType          String            // 'fixed', 'variable', 'tiered'
+  requirements        String?           // JSON: skills, experience, deliverables
+  maxParticipants     Int?
+  currentParticipants Int               @default(0)
+  deadline            DateTime?
+  metadata            String?           // JSON: additional info
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  submissions         MissionSubmission[]
+
+  @@index([type])
+  @@index([category])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model MissionSubmission {
+  id            String   @id @default(cuid())
+  missionId     String
+  mission       Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status        String   @default("pending") // 'pending', 'reviewing', 'approved', 'rejected'
+  content       String?
+  attachments   String?  // JSON: URLs to files, images, videos
+  rewardAmount  String   @default("0")
+  feedback      String?
+  submittedAt   DateTime @default(now())
+  reviewedAt    DateTime?
+
+  @@unique([missionId, userId])
+  @@index([userId])
+  @@index([status])
+  @@index([submittedAt])
+}
+
+// User Level & Experience
+model UserLevel {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level         Int      @default(1)
+  experience    Int      @default(0) // XP points
+  totalRewards  String   @default("0") // Total VOD earned
+  achievements  Int      @default(0) // Count of achievements
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([level])
+}
+
+// Library/Research Items
+model LibraryItem {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  type        String    // 'research', 'article', 'study', 'publication', 'project_card'
+  category    String    // 'water_resources', 'ecology', 'technology', 'policy', 'science'
+  authorId    String?
+  author      User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  content     String?
+  fileUrl     String?
+  imageUrl    String?
+  tags        String?   // JSON array
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  views       Int       @default(0)
+  likes       Int       @default(0)
+  metadata    String?   // JSON: DOI, journal, citations, etc.
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  comments    Comment[]
+
+  @@index([type])
+  @@index([category])
+  @@index([published])
+  @@index([authorId])
+}
+
+// Airdrop System
+model Airdrop {
+  id                String              @id @default(cuid())
+  name              String
+  description       String
+  type              String              // 'social_share', 'referral', 'mission', 'news_submission', 'general'
+  totalAmount       String
+  distributedAmount String              @default("0")
+  startDate         DateTime
+  endDate           DateTime?
+  criteria          String?             // JSON: requirements
+  status            String              @default("active") // 'active', 'paused', 'completed'
+  createdAt         DateTime            @default(now())
+
+  distributions     AirdropDistribution[]
+
+  @@index([type])
+  @@index([status])
+  @@index([startDate])
+}
+
+model AirdropDistribution {
+  id            String   @id @default(cuid())
+  airdropId     String
+  airdrop       Airdrop  @relation(fields: [airdropId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount        String
+  reason        String
+  status        String   @default("pending") // 'pending', 'distributed', 'failed'
+  distributedAt DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([status])
+  @@index([airdropId])
+}

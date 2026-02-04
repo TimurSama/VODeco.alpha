@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VODeco MVP
+
+Decentralized platform for water resource management with blockchain integration readiness.
+
+## Tech Stack
+
+- **Framework**: Next.js 16+ (App Router) + React 19 + TypeScript
+- **Styling**: Tailwind CSS 4 + Custom CSS (Glass Morphism, Neomorphism, Cyberneon)
+- **3D Graphics**: Three.js + @react-three/fiber + @react-three/drei
+- **State Management**: Zustand
+- **Database**: SQLite (dev) → PostgreSQL (production) via Prisma ORM
+- **i18n**: Custom i18n solution (next-intl ready)
+- **Telegram**: @twa-dev/sdk for Mini App
+- **Blockchain Ready**: ethers.js v6 + wagmi + viem
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+# Edit .env.local with your configuration
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Initialize database:
+```bash
+npm run db:push
+npm run db:seed
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+5. Run development server:
+```bash
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+vod-eco-mvp/
+├── app/                    # Next.js App Router pages
+│   ├── (main)/            # Main application pages
+│   │   ├── dashboard/     # Dashboard with 3D globe
+│   │   ├── profile/       # User profile
+│   │   ├── wallet/        # Wallet (offchain tokens)
+│   │   ├── news/          # News feed
+│   │   ├── projects/      # Project HUB
+│   │   └── ...
+│   └── api/               # API routes
+├── src/
+│   ├── components/        # React components
+│   │   ├── layout/       # Layout components (Header, Sidebar)
+│   │   ├── globe/        # 3D globe components
+│   │   └── ...
+│   ├── lib/              # Utilities and services
+│   │   ├── api/          # API clients
+│   │   ├── db/           # Database (Prisma)
+│   │   ├── i18n/         # Internationalization
+│   │   └── ...
+│   └── ...
+├── prisma/               # Prisma schema and migrations
+└── public/               # Static assets
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Features
 
-## Deploy on Vercel
+### ✅ Implemented
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [x] Project setup with Next.js 16 + TypeScript
+- [x] Prisma database schema with SQLite
+- [x] Design system (Cyberneon + Glass Morphism + Neomorphism)
+- [x] Layout components (Header, Sidebar, Logo, Language Switcher)
+- [x] Internationalization (EN/RU) with context provider
+- [x] 3D Interactive Globe component with Three.js
+- [x] Dashboard page with water resources and metrics
+- [x] Water Resources API integration (DB + OSM fallback)
+- [x] Database seeding with sample data
+- [x] Project HUB page with project cards
+- [x] Wallet page with balance and staking display
+- [x] Profile page with user information
+- [x] News feed page structure
+- [x] Telegram Mini App SDK integration (ready)
+- [x] Telegram authentication API route
+- [x] Error boundary and loading components
+- [x] Utility functions (formatting, constants)
+- [x] Zustand stores (sidebar, wallet)
+- [x] API clients for projects, news, water resources
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 📋 Planned
+
+- [ ] Blockchain integration (ethers.js/wagmi)
+- [ ] DAO governance system
+- [ ] Real-time data updates
+- [ ] Advanced filtering and search
+- [ ] Mobile optimizations
+
+## Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run db:push` - Push Prisma schema to database
+- `npm run db:seed` - Seed database with initial data
+- `npm run db:studio` - Open Prisma Studio
+
+## Environment Variables
+
+See `.env.example` for required environment variables.
+
+## License
+
+MIT

@@ -1,0 +1,34 @@
+# Development files
+.env
+.env.local
+.env*.local
+dev.db
+dev.db-journal
+
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+dist
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.DS_Store
+*.pem
