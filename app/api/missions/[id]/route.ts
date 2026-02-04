@@ -8,11 +8,12 @@ import { requireAuth, optionalAuth } from '@/lib/auth/middleware';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const mission = await prisma.mission.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         submissions: {
           include: {
@@ -45,7 +46,7 @@ export async function GET(
       userSubmission = await prisma.missionSubmission.findUnique({
         where: {
           missionId_userId: {
-            missionId: params.id,
+            missionId: id,
             userId: user.userId,
           },
         },

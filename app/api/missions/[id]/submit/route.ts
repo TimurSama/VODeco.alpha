@@ -10,9 +10,10 @@ import { XP_REWARDS } from '@/lib/tokenomics/rewards';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const authResult = await requireAuth(request);
     if (authResult instanceof NextResponse) {
       return authResult;
@@ -20,7 +21,7 @@ export async function POST(
     const { user } = authResult;
 
     const mission = await prisma.mission.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!mission) {
@@ -41,7 +42,7 @@ export async function POST(
     const existingSubmission = await prisma.missionSubmission.findUnique({
       where: {
         missionId_userId: {
-          missionId: params.id,
+          missionId: id,
           userId: user.userId,
         },
       },
@@ -68,7 +69,7 @@ export async function POST(
     // Create submission
     const submission = await prisma.missionSubmission.create({
       data: {
-        missionId: params.id,
+        missionId: id,
         userId: user.userId,
         content: content || null,
         attachments: attachments ? JSON.stringify(attachments) : null,
@@ -79,7 +80,7 @@ export async function POST(
 
     // Update mission participants count
     await prisma.mission.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         currentParticipants: {
           increment: 1,
