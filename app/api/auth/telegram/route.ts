@@ -108,6 +108,10 @@ export async function POST(request: NextRequest) {
             },
           },
         },
+        include: {
+          wallet: true,
+          level: true,
+        },
       });
 
       // Create referral code for new user
@@ -238,7 +242,10 @@ export async function POST(request: NextRequest) {
           lastName: body.last_name,
           avatar: body.photo_url,
         },
-        include: { wallet: true, level: true },
+        include: {
+          wallet: true,
+          level: true,
+        },
       });
 
       // Create referral code if user doesn't have one
