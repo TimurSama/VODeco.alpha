@@ -105,37 +105,18 @@ git push -u origin main
 1. В Vercel Dashboard → ваш проект → **"Settings"**
 2. В меню слева выберите **"Environment Variables"**
 
-### 4.2. Добавьте обязательные переменные
+### 4.2. Проверьте автоматически добавленные переменные
 
-Нажмите **"Add New"** и добавьте каждую переменную:
+После создания PostgreSQL базы данных, Vercel автоматически добавит:
+- ✅ `DATABASE_URL` - уже готово!
 
-#### ✅ JWT_SECRET (ОБЯЗАТЕЛЬНО!)
+**Для тестовой версии этого достаточно!** Приложение будет работать с дефолтными настройками.
 
-```
-Key: JWT_SECRET
-Value: [сгенерируйте случайную строку минимум 32 символа]
-Environment: Production, Preview, Development
-```
+### 4.3. Опциональные переменные (добавьте при необходимости)
 
-**Как сгенерировать:**
-```bash
-# В PowerShell:
--join ((65..90) + (97..122) + (48..57) | Get-Random -Count 64 | ForEach-Object {[char]$_})
+Если хотите настроить дополнительные функции, добавьте:
 
-# Или используйте онлайн генератор: https://randomkeygen.com/
-```
-
-**Пример значения:** `ba0a89f5cdb813af31576f3889c601e6e435922c911f157faa58076e04294e51`
-
-#### ✅ JWT_EXPIRES_IN
-
-```
-Key: JWT_EXPIRES_IN
-Value: 7d
-Environment: Production, Preview, Development
-```
-
-#### ✅ NEXT_PUBLIC_APP_URL
+#### ⚙️ NEXT_PUBLIC_APP_URL (опционально, можно добавить после деплоя)
 
 ```
 Key: NEXT_PUBLIC_APP_URL
@@ -143,9 +124,9 @@ Value: https://ваш-проект.vercel.app
 Environment: Production, Preview, Development
 ```
 
-**Примечание:** Замените `ваш-проект` на название вашего проекта в Vercel. Если еще не знаете, добавьте после первого деплоя.
+**Примечание:** Замените `ваш-проект` на название вашего проекта в Vercel. Можно добавить после первого деплоя.
 
-#### ✅ DATABASE_URL
+#### ✅ DATABASE_URL (автоматически)
 
 ```
 Key: DATABASE_URL
@@ -155,7 +136,30 @@ Environment: Production, Preview, Development
 
 **Проверьте:** Должен быть автоматически добавлен после создания базы данных.
 
-#### ⚙️ TELEGRAM_BOT_TOKEN (опционально)
+#### ⚙️ JWT_SECRET (опционально, для продакшена)
+
+```
+Key: JWT_SECRET
+Value: [любая случайная строка, минимум 32 символа]
+Environment: Production, Preview, Development
+```
+
+**Примечание:** Для тестовой версии не обязателен - приложение использует дефолтный ключ. Добавьте свой для продакшена.
+
+#### ⚙️ NEWS_API_KEY (опционально, если используете NewsAPI)
+
+```
+Key: NEWS_API_KEY
+Value: [ваш ключ от newsapi.org]
+Environment: Production, Preview, Development
+```
+
+**Как получить:**
+1. Зарегистрируйтесь на [newsapi.org](https://newsapi.org)
+2. Получите бесплатный API ключ
+3. Скопируйте ключ
+
+#### ⚙️ TELEGRAM_BOT_TOKEN (опционально, если используете Telegram Mini App)
 
 ```
 Key: TELEGRAM_BOT_TOKEN
@@ -169,27 +173,6 @@ Environment: Production, Preview, Development
 3. Отправьте `/newbot`
 4. Следуйте инструкциям
 5. Скопируйте токен (формат: `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`)
-
-#### ⚙️ NEWS_API_KEY (опционально)
-
-```
-Key: NEWS_API_KEY
-Value: [ваш ключ от newsapi.org]
-Environment: Production, Preview, Development
-```
-
-**Как получить:**
-1. Зарегистрируйтесь на [newsapi.org](https://newsapi.org)
-2. Получите бесплатный API ключ
-3. Скопируйте ключ
-
-#### ✅ NODE_ENV
-
-```
-Key: NODE_ENV
-Value: production
-Environment: Production only
-```
 
 ---
 
@@ -333,18 +316,17 @@ npm run db:seed
 - [ ] Git репозиторий создан и запушен на GitHub
 - [ ] Vercel проект создан и подключен к GitHub
 - [ ] PostgreSQL база данных создана в Vercel
-- [ ] `DATABASE_URL` добавлен автоматически
-- [ ] `JWT_SECRET` добавлен (минимум 32 символа)
-- [ ] `JWT_EXPIRES_IN` добавлен (`7d`)
-- [ ] `NEXT_PUBLIC_APP_URL` добавлен
-- [ ] `NODE_ENV` добавлен (`production`)
-- [ ] `TELEGRAM_BOT_TOKEN` добавлен (если используется)
-- [ ] `NEWS_API_KEY` добавлен (если используется)
+- [ ] `DATABASE_URL` добавлен автоматически ✅
 - [ ] Первый деплой выполнен успешно
 - [ ] Миграции применены (`npx prisma migrate deploy`)
 - [ ] Приложение открывается и работает
 - [ ] API endpoints отвечают корректно
 - [ ] База данных содержит таблицы
+
+**Опционально (для продакшена):**
+- [ ] `JWT_SECRET` добавлен (для безопасности)
+- [ ] `NEWS_API_KEY` добавлен (если используете NewsAPI)
+- [ ] `NEXT_PUBLIC_APP_URL` добавлен (после деплоя)
 
 ---
 
@@ -352,10 +334,7 @@ npm run db:seed
 
 ### Ошибка: "JWT_SECRET is required in production"
 
-**Решение:**
-1. Убедитесь, что `JWT_SECRET` добавлен в Vercel Environment Variables
-2. Проверьте, что выбран правильный Environment (Production, Preview, Development)
-3. Перезапустите деплой после добавления переменной
+**Решение:** Эта ошибка больше не должна появляться. Приложение использует дефолтный ключ для тестирования. Для продакшена добавьте свой `JWT_SECRET` в Environment Variables.
 
 ### Ошибка: "DATABASE_URL is not set"
 

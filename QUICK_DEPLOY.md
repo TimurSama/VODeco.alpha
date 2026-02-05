@@ -15,16 +15,13 @@ git push -u origin main
 1. [vercel.com](https://vercel.com) → **"Add New Project"**
 2. Выберите репозиторий `vod-eco-mvp`
 3. **Storage** → **Create Database** → **Postgres** (Hobby план)
-4. **Settings** → **Environment Variables** → Добавьте:
+4. **Deploy** → Дождитесь завершения
 
-```
-JWT_SECRET=ba0a89f5cdb813af31576f3889c601e6e435922c911f157faa58076e04294e51
-JWT_EXPIRES_IN=7d
-NEXT_PUBLIC_APP_URL=https://ваш-проект.vercel.app
-NODE_ENV=production
-```
+**Готово!** `DATABASE_URL` добавится автоматически. Приложение работает с дефолтными настройками.
 
-5. **Deploy** → Дождитесь завершения
+**Опционально** (после деплоя можно добавить):
+- `NEWS_API_KEY` - если хотите использовать NewsAPI
+- `NEXT_PUBLIC_APP_URL` - URL вашего проекта (можно добавить после первого деплоя)
 
 ### 3. Миграции (после первого деплоя)
 ```bash
