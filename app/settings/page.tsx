@@ -13,7 +13,18 @@ export default function SettingsPage() {
     news: true,
   });
 
-  const settingsSections = [
+  type SettingsItem =
+    | { label: string; action: () => void; danger?: boolean }
+    | {
+        label: string;
+        type: 'toggle';
+        value: boolean;
+        onChange: (val: boolean) => void;
+        danger?: boolean;
+      };
+  type SettingsSection = { title: string; icon: typeof User; items: SettingsItem[] };
+
+  const settingsSections: SettingsSection[] = [
     {
       title: t('settings.profile'),
       icon: User,
@@ -103,7 +114,7 @@ export default function SettingsPage() {
                       <span className={item.danger ? 'text-red-400' : ''}>
                         {item.label}
                       </span>
-                      {item.type === 'toggle' ? (
+                      {'type' in item && item.type === 'toggle' ? (
                         <button
                           onClick={() => item.onChange?.(!item.value)}
                           className={`w-12 h-6 rounded-full transition-colors ${
@@ -116,11 +127,11 @@ export default function SettingsPage() {
                             }`}
                           />
                         </button>
-                      ) : (
+                      ) : 'action' in item ? (
                         <button onClick={item.action}>
                           <ArrowRight className="w-5 h-5 text-white/60" />
                         </button>
-                      )}
+                      ) : null}
                     </div>
                   ))}
                 </div>

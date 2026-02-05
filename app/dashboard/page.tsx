@@ -7,10 +7,12 @@ import MetricsPanel from '@/components/dashboard/MetricsPanel';
 import ResourceInfoPanel from '@/components/dashboard/ResourceInfoPanel';
 import { fetchWaterResources, WaterResource } from '@/lib/api/water-resources';
 import { fetchEnhancedWaterData, calculateQualityTrends } from '@/lib/api/enhanced-water-data';
+import { fetchWorldBankWaterData } from '@/lib/api/world-bank-api';
 import { Filter, Search, X, MapPin, Droplets, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/context';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import { trackEvent } from '@/lib/analytics';
 
 export default function DashboardPage() {
   const { t } = useLanguage();
@@ -27,10 +29,21 @@ export default function DashboardPage() {
   });
   const [enhancedMetrics, setEnhancedMetrics] = useState<any>(null);
   const [qualityTrends, setQualityTrends] = useState<any[]>([]);
+  const [includeExternal, setIncludeExternal] = useState(true);
+  const [externalStats, setExternalStats] = useState({ osm: 0, usgs: 0, worldBank: 0 });
 
   useEffect(() => {
     loadWaterResources();
-  }, [filters]);
+  }, [filters, includeExternal]);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) return;
+    const handle = setTimeout(() => {
+      if (searchQuery.trim().length < 3) return;
+      trackEvent('dashboard_search', { queryLength: searchQuery.trim().length });
+    }, 500);
+    return () => clearTimeout(handle);
+  }, [searchQuery]);
 
   const loadWaterResources = async () => {
     setLoading(true);
@@ -40,23 +53,60 @@ export default function DashboardPage() {
         category: filters.category.length > 0 ? filters.category : undefined,
         country: filters.country || undefined,
         minQuality: filters.minQuality > 0 ? filters.minQuality : undefined,
+        includeExternal,
       });
       setWaterResources(dbResources);
       
-      // Fetch enhanced metrics and trends (with external data)
-      const enhanced = await fetchEnhancedWaterData(dbResources, true);
+      // Metrics based on already loaded resources
+      const enhanced = await fetchEnhancedWaterData(dbResources, false);
       setEnhancedMetrics(enhanced.metrics);
       setQualityTrends(calculateQualityTrends(dbResources, 'week'));
-      
-      // Log external data sources
-      if (enhanced.externalData.osm.length > 0) {
-        console.log(`✅ OSM: ${enhanced.externalData.osm.length} water features`);
-      }
-      if (enhanced.externalData.usgs.length > 0) {
-        console.log(`✅ USGS: ${enhanced.externalData.usgs.length} monitoring sites`);
-      }
-      if (enhanced.externalData.worldBank.length > 0) {
-        console.log(`✅ World Bank: ${enhanced.externalData.worldBank.length} country records`);
+      let worldBankCount = 0;
+      if (includeExternal) {
+        try {
+          const worldBankData = await fetchWorldBankWaterData();
+          worldBankCount = worldBankData.length;
+        } catch (error) {
+          console.warn('World Bank data unavailable:', error);
+        }
+        const externalCounts = dbResources.reduce(
+          (acc, resource) => {
+            const metadata = typeof resource.metadata === 'string'
+              ? (() => {
+                  try {
+                    return JSON.parse(resource.metadata);
+                  } catch {
+                    return null;
+                  }
+                })()
+              : resource.metadata;
+            if (metadata?.external) {
+              const source = String(metadata?.source || '').toLowerCase();
+              if (source.includes('openstreetmap')) acc.osm += 1;
+              else if (source.includes('usgs')) acc.usgs += 1;
+              else if (source.includes('world bank')) acc.worldBank += 1;
+            }
+            return acc;
+          },
+          { osm: 0, usgs: 0, worldBank: 0 }
+        );
+        setExternalStats({ ...externalCounts, worldBank: externalCounts.worldBank + worldBankCount });
+        trackEvent('dashboard_load', {
+          resources: dbResources.length,
+          includeExternal,
+          osm: externalCounts.osm,
+          usgs: externalCounts.usgs,
+          worldBank: externalCounts.worldBank + worldBankCount,
+        });
+      } else {
+        setExternalStats({ osm: 0, usgs: 0, worldBank: 0 });
+        trackEvent('dashboard_load', {
+          resources: dbResources.length,
+          includeExternal,
+          osm: 0,
+          usgs: 0,
+          worldBank: 0,
+        });
       }
     } catch (error) {
       console.error('Error loading water resources:', error);
@@ -85,6 +135,16 @@ export default function DashboardPage() {
         ? prev[type].filter(v => v !== value)
         : [...prev[type], value],
     }));
+    trackEvent('dashboard_filter_toggle', { filterType: type, value });
+  };
+
+  const selectResource = (resource: WaterResource) => {
+    setSelectedResource(resource);
+    trackEvent('dashboard_resource_open', {
+      resourceId: resource.id,
+      type: resource.type,
+      category: resource.category,
+    });
   };
 
   if (loading) {
@@ -145,7 +205,7 @@ export default function DashboardPage() {
                       {t('dashboard.selectType')}
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {['river', 'lake', 'sea', 'ocean', 'station', 'treatment'].map((type) => (
+                      {['river', 'lake', 'sea', 'ocean', 'glacier', 'underground', 'station', 'treatment', 'organization'].map((type) => (
                         <button
                           key={type}
                           onClick={() => toggleFilter('type', type)}
@@ -193,11 +253,31 @@ export default function DashboardPage() {
                       min="0"
                       max="100"
                       value={filters.minQuality}
-                      onChange={(e) => setFilters(prev => ({ ...prev, minQuality: parseInt(e.target.value) }))}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value);
+                    setFilters(prev => ({ ...prev, minQuality: value }));
+                    trackEvent('dashboard_quality_filter', { value });
+                  }}
                       className="w-full"
                     />
                   </div>
                 </div>
+
+            <div className="mt-4 flex items-center gap-3">
+              <label className="flex items-center gap-2 text-sm text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={includeExternal}
+                  onChange={(e) => {
+                    const next = e.target.checked;
+                    setIncludeExternal(next);
+                    trackEvent('dashboard_external_toggle', { enabled: next });
+                  }}
+                  className="accent-cyan-400"
+                />
+                Подключать внешние источники (OSM/USGS/World Bank)
+              </label>
+            </div>
 
                 {/* Clear Filters */}
                 <button
@@ -279,6 +359,29 @@ export default function DashboardPage() {
                 },
               ] : undefined}
             />
+
+            {/* External Sources Status */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="neo-card p-4 mt-4"
+            >
+              <h4 className="text-sm font-bold text-white mb-3">Источники данных</h4>
+              <div className="space-y-2 text-xs text-slate-400">
+                <div className="flex items-center justify-between">
+                  <span>OpenStreetMap</span>
+                  <span className="text-cyan-glow">{externalStats.osm}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>USGS</span>
+                  <span className="text-cyan-glow">{externalStats.usgs}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>World Bank</span>
+                  <span className="text-cyan-glow">{externalStats.worldBank}</span>
+                </div>
+              </div>
+            </motion.div>
             
             {/* Quality Trends Chart */}
             {qualityTrends.length > 0 && (
@@ -335,9 +438,14 @@ export default function DashboardPage() {
             >
               <Globe3D 
                 waterResources={filteredResources} 
-                onResourceClick={setSelectedResource} 
+                onResourceClick={selectResource} 
               />
             </motion.div>
+            {filteredResources.length === 0 && (
+              <div className="mt-4 glass-card p-4 text-center text-slate-400">
+                Нет ресурсов по текущим фильтрам. Попробуйте сбросить фильтры.
+              </div>
+            )}
 
             {/* Resource Stats - Mobile */}
             <div className="lg:hidden mt-4 grid grid-cols-2 gap-4">
@@ -377,7 +485,7 @@ export default function DashboardPage() {
               key={resource.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              onClick={() => setSelectedResource(resource)}
+              onClick={() => selectResource(resource)}
               className="glass-card cursor-pointer active:scale-95 transition-transform"
             >
               <div className="flex items-center justify-between">

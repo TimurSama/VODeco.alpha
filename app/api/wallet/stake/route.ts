@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { requireAuth } from '@/lib/auth/middleware';
+import { calculateLevel } from '@/lib/tokenomics/rewards';
 
 /**
  * POST /api/wallet/stake
@@ -45,6 +46,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Insufficient balance' },
         { status: 400 }
+      );
+    }
+
+    // Eligibility gate: must be active contributor or investor
+    const [userLevel, approvedMissions, referralsUsed, postCount] = await Promise.all([
+      prisma.userLevel.findUnique({ where: { userId } }),
+      prisma.missionSubmission.count({ where: { userId, status: 'approved' } }),
+      prisma.referral.count({ where: { referrerId: userId, status: 'used' } }),
+      prisma.post.count({ where: { authorId: userId } }),
+    ]);
+
+    const level = userLevel ? calculateLevel(userLevel.experience) : 1;
+    const isEligible =
+      level >= 2 || approvedMissions >= 3 || referralsUsed >= 5 || postCount >= 10;
+
+    if (!isEligible) {
+      return NextResponse.json(
+        {
+          error:
+            'Staking requires активное участие: уровень 2+ или 3 миссии, или 5 рефералов, или 10 публикаций.',
+        },
+        { status: 403 }
       );
     }
 

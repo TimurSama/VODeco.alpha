@@ -198,6 +198,26 @@ export default function WalletPage() {
                 <p className="text-sm text-white/60">{t('wallet.connectWalletDesc')}</p>
               </button>
             </div>
+
+            <div className="mt-6 glass p-5 rounded-xl">
+              <div className="flex items-center gap-2 mb-2">
+                <Coins className="w-5 h-5 text-neon-cyan" />
+                <h3 className="font-semibold">Покупка VOD credits</h3>
+              </div>
+              <p className="text-sm text-white/60 mb-3">
+                В MVP покупка работает как пред‑сенсорные кредиты для участия в проектах и миссиях.
+              </p>
+              <div className="text-sm text-white/70 space-y-1">
+                <div>1) Подготовить платёжный метод (fiat/crypto).</div>
+                <div>2) Пройти базовую верификацию (по требованию региона).</div>
+                <div>3) Получить VOD credits и использовать в TokenHub.</div>
+              </div>
+              <div className="mt-3">
+                <Link href="/whitepaper#token" className="text-neon-cyan hover:underline text-sm">
+                  Условия и политика выпуска
+                </Link>
+              </div>
+            </div>
           </motion.div>
         )}
 
@@ -211,7 +231,7 @@ export default function WalletPage() {
               <div className="glass-card">
                 <div className="text-slate-300 font-semibold">Активных стейков пока нет</div>
                 <div className="text-slate-400 text-sm mt-1">
-                  Откройте проекты и застейкайте токены в выбранный проект.
+                  Откройте проекты и застейкайте VOD credits в выбранный проект.
                 </div>
                 <div className="mt-3 flex gap-2">
                   <Link href="/projects" className="px-4 py-2 neo-button rounded-xl font-semibold">

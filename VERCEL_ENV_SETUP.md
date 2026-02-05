@@ -12,7 +12,7 @@
 ### ⚙️ Опциональные переменные
 
 5. **TELEGRAM_BOT_TOKEN** - если используете Telegram auth
-6. **NEXT_PUBLIC_NEWS_API_KEY** - если используете NewsAPI
+6. **NEWS_API_KEY** - если используете NewsAPI
 7. **NODE_ENV** - окружение (production)
 
 ---
@@ -98,11 +98,11 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-#### 5. NEXT_PUBLIC_NEWS_API_KEY (опционально)
+#### 5. NEWS_API_KEY (опционально)
 
-**Key:** `NEXT_PUBLIC_NEWS_API_KEY`
+**Key:** `NEWS_API_KEY`
 
-**Value:** Ваш ключ от NewsAPI
+**Value:** Ваш ключ от NewsAPI (серверная переменная)
 
 **Как получить:**
 1. Зарегистрируйтесь на [newsapi.org](https://newsapi.org)
@@ -147,7 +147,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ✅ JWT_EXPIRES_IN=7d
 ✅ NEXT_PUBLIC_APP_URL=https://vo-deco-alpha.vercel.app
 ✅ TELEGRAM_BOT_TOKEN=ваш-токен (если используете)
-✅ NEXT_PUBLIC_NEWS_API_KEY=ваш-ключ (опционально)
+✅ NEWS_API_KEY=ваш-ключ (опционально)
 ✅ NODE_ENV=production (только Production)
 ```
 

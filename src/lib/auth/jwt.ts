@@ -4,8 +4,10 @@
 
 import * as jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'vodeco-secret-key-change-in-production';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+// Use fallback for build/dev, require env var in production runtime only
+const JWT_SECRET: jwt.Secret =
+  process.env.JWT_SECRET || 'vodeco-secret-key-change-in-production';
+const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '7d') as jwt.SignOptions['expiresIn'];
 
 export interface JWTPayload {
   userId: string;
@@ -18,6 +20,10 @@ export interface JWTPayload {
  * Generate JWT token for user
  */
 export function generateToken(payload: JWTPayload): string {
+  // Runtime check
+  if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is required in production.');
+  }
   return jwt.sign(payload, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
   });
@@ -27,6 +33,10 @@ export function generateToken(payload: JWTPayload): string {
  * Verify and decode JWT token
  */
 export function verifyToken(token: string): JWTPayload | null {
+  // Runtime check
+  if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is required in production.');
+  }
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
     return decoded;

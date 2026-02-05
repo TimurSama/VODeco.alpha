@@ -41,16 +41,13 @@ npm run db:seed
 
 **Что нужно создать:**
 
-1. **Создайте файл `.env.local`** (скопируйте из `.env.example`):
-```bash
-cp .env.example .env.local
-```
+1. **Создайте файл `.env.local`** по списку из `ENV_VARIABLES_LIST.md`.
 
 2. **Откройте `.env.local` и настройте:**
 
 ```env
-# База данных (для локальной разработки - SQLite)
-DATABASE_URL="file:./dev.db"
+# База данных (PostgreSQL)
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB?schema=public"
 
 # JWT секретный ключ (ОБЯЗАТЕЛЬНО измените!)
 # Пример сгенерированного ключа:
@@ -64,7 +61,7 @@ TELEGRAM_BOT_TOKEN="ваш-токен-бота"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # News API (опционально)
-NEXT_PUBLIC_NEWS_API_KEY="ваш-ключ"
+NEWS_API_KEY="ваш-ключ"
 ```
 
 **⚠️ ВАЖНО:** 

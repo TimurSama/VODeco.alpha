@@ -8,7 +8,7 @@ Decentralized platform for water resource management with blockchain integration
 - **Styling**: Tailwind CSS 4 + Custom CSS (Glass Morphism, Neomorphism, Cyberneon)
 - **3D Graphics**: Three.js + @react-three/fiber + @react-three/drei
 - **State Management**: Zustand
-- **Database**: SQLite (dev) → PostgreSQL (production) via Prisma ORM
+- **Database**: PostgreSQL via Prisma ORM
 - **i18n**: Custom i18n solution (next-intl ready)
 - **Telegram**: @twa-dev/sdk for Mini App
 - **Blockchain Ready**: ethers.js v6 + wagmi + viem
@@ -29,10 +29,7 @@ npm install
 ```
 
 3. Set up environment variables:
-```bash
-cp .env.example .env.local
-# Edit .env.local with your configuration
-```
+   - Create `.env.local` using `ENV_VARIABLES_LIST.md`
 
 4. Initialize database:
 ```bash
@@ -80,7 +77,7 @@ vod-eco-mvp/
 ### ✅ Implemented
 
 - [x] Project setup with Next.js 16 + TypeScript
-- [x] Prisma database schema with SQLite
+- [x] Prisma database schema with PostgreSQL
 - [x] Design system (Cyberneon + Glass Morphism + Neomorphism)
 - [x] Layout components (Header, Sidebar, Logo, Language Switcher)
 - [x] Internationalization (EN/RU) with context provider
@@ -118,7 +115,7 @@ vod-eco-mvp/
 
 ## Environment Variables
 
-See `.env.example` for required environment variables.
+See `ENV_VARIABLES_LIST.md` for required environment variables.
 
 ## License
 

@@ -119,8 +119,8 @@ declare global {
 
 export interface TelegramData {
   isTelegram: boolean;
-  webApp: Window['Telegram']['WebApp'] | null;
-  user: Window['Telegram']['WebApp']['initDataUnsafe']['user'] | null;
+  webApp: NonNullable<Window['Telegram']>['WebApp'] | null;
+  user: NonNullable<Window['Telegram']>['WebApp']['initDataUnsafe']['user'] | null;
 }
 
 /**

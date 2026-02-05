@@ -10,24 +10,13 @@
 
 ### 1️⃣ Локальная настройка (5 минут)
 
-```bash
-# 1. Создайте файл .env.local
-cp .env.example .env.local
-
-# 2. Откройте .env.local и настройте:
-# - JWT_SECRET (сгенерируйте случайный ключ минимум 32 символа)
-# - TELEGRAM_BOT_TOKEN (если используете)
-# - NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# 3. Запустите миграции
-npx prisma migrate dev --name init
-
-# 4. Заполните тестовыми данными
-npm run db:seed
-
-# 5. Запустите локально
-npm run dev
-```
+1. Создайте `.env.local` по списку из `ENV_VARIABLES_LIST.md` и укажите:
+   - `JWT_SECRET` (сгенерируйте случайный ключ минимум 32 символа)
+   - `TELEGRAM_BOT_TOKEN` (если используете)
+   - `NEXT_PUBLIC_APP_URL=http://localhost:3000`
+2. Запустите миграции: `npx prisma migrate dev --name init`
+3. Заполните тестовыми данными: `npm run db:seed`
+4. Запустите локально: `npm run dev`
 
 ### 2️⃣ Деплой на Vercel (10 минут)
 
@@ -48,7 +37,7 @@ npm run dev
 
 3. **Добавьте переменные окружения в Vercel:**
    - Settings → Environment Variables
-   - Добавьте все из `.env.example`:
+   - Добавьте все из `ENV_VARIABLES_LIST.md`:
      ```
      JWT_SECRET=ваш-секретный-ключ
      JWT_EXPIRES_IN=7d
@@ -89,7 +78,7 @@ npm run dev
 
 ```bash
 # Локально
-npm install && cp .env.example .env.local && npx prisma migrate dev && npm run db:seed && npm run dev
+npm install && npx prisma migrate dev && npm run db:seed && npm run dev
 ```
 
 ---

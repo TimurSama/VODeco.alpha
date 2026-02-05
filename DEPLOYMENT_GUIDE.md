@@ -4,18 +4,16 @@
 
 ### Шаг 1: Подготовка локально
 
-1. **Создайте файл `.env.local`** (скопируйте из `.env.example`):
-```bash
-cp .env.example .env.local
-```
+1. **Создайте файл `.env.local`** по списку из `ENV_VARIABLES_LIST.md`.
 
 2. **Настройте переменные окружения в `.env.local`**:
 ```env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB?schema=public"
 JWT_SECRET="ваш-секретный-ключ-минимум-32-символа"
 JWT_EXPIRES_IN="7d"
 TELEGRAM_BOT_TOKEN="ваш-токен-бота"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
+NEWS_API_KEY="ваш-ключ-newsapi"
 ```
 
 3. **Запустите миграции базы данных**:
@@ -197,7 +195,7 @@ npm install
 
 4. **Настройка переменных окружения**:
 ```bash
-cp .env.example .env
+# Создайте .env по списку из ENV_VARIABLES_LIST.md
 nano .env
 # Настройте все переменные, особенно DATABASE_URL
 ```

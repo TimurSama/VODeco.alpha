@@ -4,7 +4,7 @@
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Set up environment variables (see `.env.example`)
+3. Set up environment variables (see `ENV_VARIABLES_LIST.md`)
 4. Initialize database: `npm run db:push && npm run db:seed`
 5. Start development server: `npm run dev`
 

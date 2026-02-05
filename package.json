@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma db push --skip-generate && next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
     "postinstall": "prisma generate",
@@ -27,6 +27,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "clsx": "^2.1.1",
     "ethers": "^6.16.0",
+    "fast-xml-parser": "^5.3.4",
     "framer-motion": "^12.30.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.563.0",

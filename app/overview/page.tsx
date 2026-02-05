@@ -8,8 +8,6 @@ import {
   Target, BarChart3, Coins, Lock, CheckCircle2, X, ChevronRight,
   Play, Pause, Award, Building2, Brain, Cpu, Network, Database
 } from 'lucide-react';
-import { useLanguage } from '@/lib/i18n/context';
-import { calculatePurchaseValue, calculateStakingRewards, formatCurrency, formatTokens } from '@/lib/tokenomics/calculations';
 
 // Icon components for funnel stages
 function AlertCircle(props: any) {
@@ -45,14 +43,14 @@ const FUNNEL_STAGES = [
     color: 'neon-cyan',
     stats: [
       { label: 'Страны', value: '150+' },
-      { label: 'Сенсоров', value: '1M+' },
+      { label: 'Сенсоры', value: 'пилот' },
     ],
   },
   {
     id: 'consideration',
     title: 'Возможности',
     subtitle: 'Инвестиции и доходность',
-    content: 'Токен VOD обеспечен реальными водными активами. Скидка 80% на покупку токенов. Стейкинг всех исследований открыт с доходностью до 25% годовых.',
+    content: 'Экономика привязана к индексу средней стоимости 1 м³ воды. До появления IoT‑сенсоров расчёты идут во внутриигровых VOD credits. Стартовые скидки действуют для ранней поддержки.',
     icon: TrendingUp,
     color: 'neon-green',
     stats: [
@@ -64,12 +62,12 @@ const FUNNEL_STAGES = [
     id: 'action',
     title: 'Действие',
     subtitle: 'Присоединяйтесь сейчас',
-    content: 'Купите токены VOD со скидкой 80%, участвуйте в стейкинге проектов и станьте частью революции в управлении водными ресурсами.',
+    content: 'Поддержите запуск сенсоров и экосистемы: получите VOD credits, участвуйте в проектах и готовьтесь к data‑mint фазе.',
     icon: Rocket,
     color: 'neon-gold',
-    cta: 'Купить токены',
+    cta: 'Получить VOD credits',
     stats: [
-      { label: 'Токенов доступно', value: '1 млрд' },
+      { label: 'MVP credits', value: '1 млрд' },
       { label: 'Проектов', value: '11+' },
     ],
   },
@@ -103,7 +101,7 @@ const PRESENTATION_SLIDES = [
     title: 'VODeco — Решение',
     features: [
       'Блокчейн для прозрачности данных',
-      'IoT-сенсоры для мониторинга в реальном времени',
+      'IoT‑сенсоры (пилот) для мониторинга в реальном времени',
       'ИИ для прогнозирования и оптимизации',
       'DAO для децентрализованного управления',
       'Токенизация водных активов',
@@ -111,17 +109,70 @@ const PRESENTATION_SLIDES = [
     visual: 'ecosystem',
   },
   {
+    id: 'roles',
+    type: 'roles',
+    title: 'Участники экосистемы',
+    roles: [
+      'Частные пользователи и участники соцсети',
+      'Инвесторы и криптоинвесторы',
+      'Учёные, исследователи и эксперты',
+      'Инженеры, инноваторы и разработчики',
+      'Компании и корпорации',
+      'НКО и международные организации (ООН, Greenpeace и др.)',
+      'Государственные представители и регуляторы',
+    ],
+    visual: 'roles',
+  },
+  {
     id: 'tokenomics',
     type: 'tokenomics',
-    title: 'Токеномика VOD',
+    title: 'Токеномика VOD / WTR',
     keyPoints: [
-      { label: '1 VOD', value: '= 1 м³ питьевой воды (мировая средняя стоимость)' },
-      { label: 'Текущая цена', value: '$0.26 (скидка 80%)' },
-      { label: 'Полная цена', value: '$1.30' },
-      { label: 'Общая эмиссия', value: '1 млрд VOD' },
-      { label: 'Стейкинг APY', value: 'до 25% годовых' },
+      { label: '1 WTR', value: '= 1 м³ воды по индексу средней стоимости' },
+      { label: 'VOD credits', value: 'пред‑сенсорные расчёты внутри платформы' },
+      { label: 'Эмиссия WTR', value: 'только по верифицированным данным воды' },
+      { label: 'MVP supply', value: '1 млрд VOD credits (демо)' },
+      { label: 'Стейкинг APY', value: 'до 25% годовых (MVP модель)' },
     ],
     visual: 'token',
+  },
+  {
+    id: 'water-index',
+    type: 'waterIndex',
+    title: 'Индекс стоимости воды (W_m3)',
+    points: [
+      'Энергозатраты: добыча, транспорт, насосы',
+      'Очистка: фильтрация, обеззараживание, лаборатории',
+      'Дефицит и устойчивость источника',
+      'Качество и сложность очистки',
+      'Углеродный след и экстерналии',
+      'Эффективность инфраструктуры (снижает индекс)',
+    ],
+    formula: 'W_m3 = BaseEnergy + BaseTreatment + BaseScarcity + BaseQuality + BaseCarbon + BaseExternalities - BaseEfficiency',
+  },
+  {
+    id: 'verification',
+    type: 'protocol',
+    title: 'Верификация и запечатывание данных',
+    points: [
+      'Измерение → калибровка → валидация',
+      'Подпись валидатора и хэш пакета',
+      'Запечатывание в ноды',
+      'Data‑mint WTR по подтверждённому объёму',
+    ],
+    flow: 'Sensor → Gateway → Validation → Signature → Hash → Nodes → Data‑Mint',
+  },
+  {
+    id: 'sensors',
+    type: 'sensors',
+    title: 'Архитектура и план сенсоров',
+    points: [
+      'Сенсорный стек: pH / Turbidity / TDS / DO / Temperature',
+      'MCU + Edge‑фильтрация + подпись',
+      'Связь: LoRaWAN / LTE‑M / NB‑IoT',
+      'Пилот → партия → массовое производство',
+    ],
+    plan: ['Исследование (1–2 мес)', 'Пилот 300–1000 шт (4–6 мес)', 'Массовое 10k+ (6–12 мес)'],
   },
   {
     id: 'projects',
@@ -140,18 +191,17 @@ const PRESENTATION_SLIDES = [
     type: 'cta',
     title: 'Присоединяйтесь к революции',
     subtitle: 'Инвестируйте в будущее воды',
-    cta: 'Купить токены',
+    cta: 'Получить VOD credits',
     benefits: [
-      'Скидка 80% на покупку',
-      'Стейкинг с доходностью до 25%',
-      'Участие в DAO управлении',
+      'Стартовые условия для ранней поддержки',
+      'Стейкинг с доходностью до 25% (MVP)',
+      'Участие в DAO‑процессах',
       'Поддержка реальных проектов',
     ],
   },
 ];
 
 export default function OverviewPage() {
-  const { t } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -181,10 +231,6 @@ export default function OverviewPage() {
     setShowModal(false);
     setModalContent(null);
   };
-
-  // Calculate token purchase example
-  const purchaseExample = calculatePurchaseValue(1000); // $1000 investment
-  const stakingExample = calculateStakingRewards(purchaseExample.tokens, 12, 'research');
 
   return (
     <div ref={containerRef} className="min-h-screen bg-bg-primary relative overflow-hidden">
@@ -278,7 +324,7 @@ export default function OverviewPage() {
               href="/wallet"
               className="px-8 py-4 glass rounded-lg font-semibold hover:bg-white/10 transition-colors flex items-center gap-2"
             >
-              Купить токены
+              Получить VOD credits
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
@@ -299,7 +345,7 @@ export default function OverviewPage() {
           >
             {[
               { label: 'Страны', value: '150+' },
-              { label: 'Сенсоров', value: '1M+' },
+              { label: 'Сенсоры', value: 'пилот' },
               { label: 'Проектов', value: '11+' },
               { label: 'APY', value: 'до 25%' },
             ].map((stat, index) => (
@@ -329,7 +375,7 @@ export default function OverviewPage() {
             viewport={{ once: true }}
             className="text-5xl md:text-6xl font-bold mb-16 text-center gradient-text"
           >
-            Воронка продаж
+            Воронка вовлечения
           </motion.h2>
 
           <div className="space-y-8">
@@ -520,6 +566,26 @@ function renderSlide(slide: any) {
           </div>
         </div>
       );
+    case 'roles':
+      return (
+        <div>
+          <h2 className="text-5xl font-bold mb-8 text-center gradient-text">{slide.title}</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {slide.roles.map((role: string, i: number) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="glass-card p-5 flex items-center gap-3"
+              >
+                <CheckCircle2 className="w-6 h-6 text-neon-cyan flex-shrink-0" />
+                <span className="text-lg">{role}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      );
     case 'tokenomics':
       return (
         <div>
@@ -537,6 +603,81 @@ function renderSlide(slide: any) {
                 <span className="text-xl text-neon-cyan">{point.value}</span>
               </motion.div>
             ))}
+          </div>
+        </div>
+      );
+    case 'waterIndex':
+      return (
+        <div>
+          <h2 className="text-5xl font-bold mb-6 text-center gradient-text">{slide.title}</h2>
+          <div className="glass-card p-5 mb-6 text-white/80 text-sm">
+            {slide.formula}
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {slide.points.map((point: string, i: number) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="glass-card p-5 flex items-start gap-3"
+              >
+                <CheckCircle2 className="w-6 h-6 text-neon-cyan flex-shrink-0" />
+                <span className="text-lg">{point}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      );
+    case 'protocol':
+      return (
+        <div>
+          <h2 className="text-5xl font-bold mb-6 text-center gradient-text">{slide.title}</h2>
+          <div className="glass-card p-5 mb-6 text-white/80 text-sm">{slide.flow}</div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {slide.points.map((point: string, i: number) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="glass-card p-5 flex items-start gap-3"
+              >
+                <CheckCircle2 className="w-6 h-6 text-neon-green flex-shrink-0" />
+                <span className="text-lg">{point}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      );
+    case 'sensors':
+      return (
+        <div>
+          <h2 className="text-5xl font-bold mb-6 text-center gradient-text">{slide.title}</h2>
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            {slide.points.map((point: string, i: number) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="glass-card p-5 flex items-start gap-3"
+              >
+                <CheckCircle2 className="w-6 h-6 text-neon-purple flex-shrink-0" />
+                <span className="text-lg">{point}</span>
+              </motion.div>
+            ))}
+          </div>
+          <div className="glass-card p-5">
+            <div className="text-sm uppercase tracking-widest text-white/50 mb-3">План</div>
+            <div className="space-y-2 text-white/80">
+              {slide.plan.map((item: string, i: number) => (
+                <div key={i} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-neon-cyan" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       );

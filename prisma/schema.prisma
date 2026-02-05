@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -20,6 +20,8 @@ model User {
   lastName         String?
   avatar           String?
   bio              String?
+  role             String   @default("activist")
+  onboardingCompleted Boolean @default(false)
   verified         Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -146,6 +148,8 @@ model WaterResource {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  comments      Comment[]
+
   @@index([type])
   @@index([category])
   @@index([latitude, longitude])
@@ -188,6 +192,7 @@ model Post {
   tags        String?  // JSON array
   location    String?  // Optional location
   likes       Int      @default(0)
+  status      String   @default("active") // 'active', 'hidden'
   comments    Comment[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -195,6 +200,7 @@ model Post {
   @@index([authorId])
   @@index([createdAt])
   @@index([type])
+  @@index([status])
 }
 
 model Comment {
@@ -208,12 +214,21 @@ model Comment {
   newsPost      NewsPost?   @relation(fields: [newsPostId], references: [id], onDelete: Cascade)
   libraryItemId String?
   libraryItem   LibraryItem? @relation(fields: [libraryItemId], references: [id], onDelete: Cascade)
+  waterResourceId String?
+  waterResource   WaterResource? @relation(fields: [waterResourceId], references: [id], onDelete: Cascade)
+  parentId      String?
+  parent        Comment?    @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies       Comment[]   @relation("CommentReplies")
+  status        String      @default("active") // 'active', 'hidden'
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   @@index([postId])
   @@index([newsPostId])
   @@index([libraryItemId])
+  @@index([waterResourceId])
+  @@index([parentId])
+  @@index([status])
 }
 
 model Friendship {
@@ -489,4 +504,64 @@ model AirdropDistribution {
   @@index([userId])
   @@index([status])
   @@index([airdropId])
+}
+
+// Partner & Investor Requests
+model PartnerApplication {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  organization    String
+  role            String?
+  website         String?
+  country         String?
+  partnershipType String
+  projectFocus    String?
+  budgetRange     String?
+  message         String?
+  status          String   @default("new") // 'new', 'reviewing', 'approved', 'rejected'
+  createdAt       DateTime @default(now())
+
+  @@index([email])
+  @@index([organization])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model InvestorInquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  fund        String?
+  role        String?
+  website     String?
+  country     String?
+  ticketSize  String?
+  stageFocus  String?
+  message     String?
+  status      String   @default("new") // 'new', 'reviewing', 'approved', 'rejected'
+  createdAt   DateTime @default(now())
+
+  @@index([email])
+  @@index([fund])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model TokenPurchaseRequest {
+  id               String   @id @default(cuid())
+  name             String
+  email            String
+  walletAddress    String?
+  preferredNetwork String?
+  amount           String
+  currency         String   @default("VOD")
+  message          String?
+  status           String   @default("new") // 'new', 'reviewing', 'approved', 'rejected'
+  createdAt        DateTime @default(now())
+
+  @@index([email])
+  @@index([walletAddress])
+  @@index([status])
+  @@index([createdAt])
 }

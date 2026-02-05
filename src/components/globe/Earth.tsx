@@ -10,9 +10,10 @@ interface EarthProps {
   waterResources: WaterResource[];
   onResourceClick: (resource: WaterResource) => void;
   mode?: 'standard' | 'satellite' | 'ecology' | 'infrastructure';
+  isRotating?: boolean;
 }
 
-export default function Earth({ waterResources, onResourceClick, mode = 'standard' }: EarthProps) {
+export default function Earth({ waterResources, onResourceClick, mode = 'standard', isRotating = true }: EarthProps) {
   const earthRef = useRef<THREE.Mesh>(null);
   
   // Загрузка реальных текстур Земли
@@ -24,7 +25,7 @@ export default function Earth({ waterResources, onResourceClick, mode = 'standar
   ]);
 
   useFrame(() => {
-    if (earthRef.current) {
+    if (earthRef.current && isRotating) {
       earthRef.current.rotation.y += 0.0005;
     }
   });
@@ -151,12 +152,10 @@ export default function Earth({ waterResources, onResourceClick, mode = 'standar
                 <bufferGeometry>
                   <bufferAttribute
                     attach="attributes-position"
-                    count={2}
-                    array={new Float32Array([
+                    args={[new Float32Array([
                       position.x, position.y, position.z,
                       position.x * 0.95, position.y * 0.95, position.z * 0.95
-                    ])}
-                    itemSize={3}
+                    ]), 3]}
                   />
                 </bufferGeometry>
                 <lineBasicMaterial color={color} opacity={0.5} transparent />

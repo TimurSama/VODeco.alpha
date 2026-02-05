@@ -1,25 +1,26 @@
 /**
- * VODeco Tokenomics Calculations
- * 
- * Base: 1 VOD = 1 m³ of drinking water (world average cost)
+ * VODeco Tokenomics Calculations (MVP)
+ *
+ * Base: 1 WTR = 1 m³ of drinking water (water cost index, not fiat)
+ * Pre-sensor phase: users operate with in-app VOD credits
  * Current discount: 80% off
  * All research staking is open
  */
 
-// World average cost of 1 m³ of drinking water
-export const WATER_COST_PER_M3 = 1.3; // USD
+// Water cost index per 1 m³ (unitless index, not fiat currency)
+export const WATER_COST_PER_M3 = 1;
 
 // Current discount (80% off)
 export const CURRENT_DISCOUNT = 0.8;
 
-// Current token price with discount
-export const CURRENT_TOKEN_PRICE = WATER_COST_PER_M3 * (1 - CURRENT_DISCOUNT); // $0.26 per VOD
+// Current credit price with discount (index units)
+export const CURRENT_TOKEN_PRICE = WATER_COST_PER_M3 * (1 - CURRENT_DISCOUNT);
 
 // Full price (after discount period)
-export const FULL_TOKEN_PRICE = WATER_COST_PER_M3; // $1.30 per VOD
+export const FULL_TOKEN_PRICE = WATER_COST_PER_M3;
 
-// Total supply (based on accessible fresh water)
-export const TOTAL_SUPPLY = 1_000_000_000; // 1 billion VOD
+// MVP credit supply (demo only; real minting is data-driven after IoT verification)
+export const TOTAL_SUPPLY = 1_000_000_000;
 
 // Staking rates (APY)
 export const STAKING_RATES = {
@@ -51,18 +52,18 @@ export const STAKING_RATES = {
  */
 export function calculatePurchaseValue(amount: number): {
   tokens: number;
-  usdValue: number;
+  inputValue: number;
   discount: number;
   savings: number;
 } {
   const tokens = amount / CURRENT_TOKEN_PRICE;
-  const usdValue = amount;
+  const inputValue = amount;
   const discount = CURRENT_DISCOUNT * 100;
   const savings = tokens * (FULL_TOKEN_PRICE - CURRENT_TOKEN_PRICE);
 
   return {
     tokens: Math.floor(tokens * 100) / 100, // Round to 2 decimals
-    usdValue,
+    inputValue,
     discount,
     savings: Math.floor(savings * 100) / 100,
   };
@@ -81,15 +82,31 @@ export function calculateStakingRewards(
   totalRewards: number;
   monthlyRewards: number;
 } {
-  const rates = STAKING_RATES[type];
   let apy = 0;
 
-  if (months <= 3) apy = rates['1-3'] || rates['1-6'] || 0;
-  else if (months <= 6) apy = rates['4-6'] || rates['1-6'] || 0;
-  else if (months <= 12) apy = rates['7-12'] || 0;
-  else if (months <= 24) apy = rates['13-24'] || 0;
-  else if (months <= 36) apy = rates['25-36'] || rates['25+'] || 0;
-  else apy = rates['37+'] || rates['25+'] || 0;
+  if (type === 'basic') {
+    const rates = STAKING_RATES.basic;
+    if (months <= 3) apy = rates['1-3'] || 0;
+    else if (months <= 6) apy = rates['4-6'] || 0;
+    else if (months <= 12) apy = rates['7-12'] || 0;
+    else if (months <= 24) apy = rates['13-24'] || 0;
+    else apy = rates['25+'] || 0;
+  } else if (type === 'project') {
+    const rates = STAKING_RATES.project;
+    if (months <= 6) apy = rates['1-6'] || 0;
+    else if (months <= 12) apy = rates['7-12'] || 0;
+    else if (months <= 24) apy = rates['13-24'] || 0;
+    else if (months <= 36) apy = rates['25-36'] || 0;
+    else apy = rates['37+'] || 0;
+  } else {
+    // research
+    const rates = STAKING_RATES.research;
+    if (months <= 6) apy = rates['1-6'] || 0;
+    else if (months <= 12) apy = rates['7-12'] || 0;
+    else if (months <= 24) apy = rates['13-24'] || 0;
+    else if (months <= 36) apy = rates['25-36'] || 0;
+    else apy = rates['37+'] || 0;
+  }
 
   const annualRewards = (amount * apy) / 100;
   const totalRewards = (annualRewards * months) / 12;
@@ -142,11 +159,6 @@ export function formatTokens(amount: number): string {
 /**
  * Format currency
  */
-export function formatCurrency(amount: number, currency = 'USD'): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
+export function formatCurrency(amount: number, unit = 'W-Index'): string {
+  return `${formatTokens(amount)} ${unit}`;
 }

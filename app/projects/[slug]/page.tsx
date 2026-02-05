@@ -22,6 +22,7 @@ interface Project {
   latitude?: number;
   longitude?: number;
   imageUrl?: string;
+  metadata?: string | null;
 }
 
 export default function ProjectDetailPage() {
@@ -100,6 +101,20 @@ export default function ProjectDetailPage() {
     ? (parseFloat(project.currentAmount) / parseFloat(project.targetAmount)) * 100
     : 0;
 
+  const metadata: {
+    verificationProtocol?: string[];
+    dataSealing?: string;
+    sensorArchitecture?: string;
+    standardizationPlan?: string;
+    rAndDPlan?: string[];
+  } | null = (() => {
+    try {
+      return project.metadata ? JSON.parse(project.metadata) : null;
+    } catch {
+      return null;
+    }
+  })();
+
   return (
     <div className="min-h-screen bg-bg-primary p-4">
       <div className="container mx-auto max-w-4xl">
@@ -169,6 +184,51 @@ export default function ProjectDetailPage() {
               {project.fullDescription || project.description}
             </p>
           </div>
+
+          {/* Verification & Sensor Protocol (if present) */}
+          {metadata && (metadata.verificationProtocol || metadata.dataSealing || metadata.sensorArchitecture) && (
+            <div className="glass p-4 rounded-xl">
+              <div className="text-sm uppercase tracking-widest text-white/50 mb-3">IoT протокол и верификация</div>
+              {metadata.dataSealing && (
+                <div className="mb-3">
+                  <div className="text-sm text-white/60 mb-1">Пайплайн запечатывания</div>
+                  <div className="text-white/80">{metadata.dataSealing}</div>
+                </div>
+              )}
+              {metadata.verificationProtocol && (
+                <div className="mb-3">
+                  <div className="text-sm text-white/60 mb-1">Шаги верификации</div>
+                  <ul className="text-white/80 list-disc list-inside space-y-1">
+                    {metadata.verificationProtocol.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {metadata.sensorArchitecture && (
+                <div>
+                  <div className="text-sm text-white/60 mb-1">Архитектура сенсоров</div>
+                  <div className="text-white/80">{metadata.sensorArchitecture}</div>
+                </div>
+              )}
+              {metadata.standardizationPlan && (
+                <div className="mt-3">
+                  <div className="text-sm text-white/60 mb-1">Стандартизация</div>
+                  <div className="text-white/80">{metadata.standardizationPlan}</div>
+                </div>
+              )}
+              {metadata.rAndDPlan && (
+                <div className="mt-3">
+                  <div className="text-sm text-white/60 mb-1">План разработки</div>
+                  <ul className="text-white/80 list-disc list-inside space-y-1">
+                    {metadata.rAndDPlan.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </motion.div>
 
         {/* Staking Section */}

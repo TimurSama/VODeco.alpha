@@ -15,7 +15,7 @@
 1. Обновите `prisma/schema.prisma`:
 ```prisma
 datasource db {
-  provider = "postgresql"  // Измените с sqlite на postgresql
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 ```
@@ -27,15 +27,15 @@ npm run db:migrate
 
 ### 2. Переменные окружения
 
-Создайте файл `.env.example` (уже создан) и настройте переменные в Vercel:
+Сформируйте `.env.local` по списку в `ENV_VARIABLES_LIST.md` и настройте переменные в Vercel:
 
 **Обязательные:**
 - `DATABASE_URL` - URL PostgreSQL базы данных
 - `NEXT_PUBLIC_APP_URL` - URL вашего приложения (например, `https://vodeco.vercel.app`)
 
 **Опциональные:**
-- `NEXT_PUBLIC_NEWS_API_KEY` - для расширенных новостных функций
-- `NEXT_PUBLIC_TELEGRAM_BOT_TOKEN` - для Telegram Mini App
+- `NEWS_API_KEY` - для расширенных новостных функций
+- `TELEGRAM_BOT_TOKEN` - для Telegram Mini App
 - `JWT_SECRET` - для аутентификации (если используется)
 - `ENCRYPTION_KEY` - для шифрования данных (если используется)
 
@@ -61,7 +61,7 @@ npm run db:migrate
 
 3. **Настройте переменные окружения:**
    - В Vercel Dashboard → Settings → Environment Variables
-   - Добавьте все необходимые переменные из `.env.example`
+   - Добавьте все необходимые переменные из `ENV_VARIABLES_LIST.md`
    - Убедитесь, что `DATABASE_URL` указывает на PostgreSQL
 
 4. **Настройте базу данных:**

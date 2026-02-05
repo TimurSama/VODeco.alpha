@@ -2,6 +2,7 @@
  * Water Data Sources API Integration
  * Aggregates data from multiple sources for comprehensive water resource information
  */
+import { XMLParser } from 'fast-xml-parser';
 
 export interface WaterDataPoint {
   id: string;
@@ -25,7 +26,7 @@ export interface NewsArticle {
   source: string;
   publishedAt: string;
   imageUrl?: string;
-  category: 'water' | 'ecology' | 'research' | 'technology' | 'policy';
+  category: 'water' | 'ecology' | 'research' | 'technology' | 'policy' | 'climate';
 }
 
 /**
@@ -111,7 +112,7 @@ export async function fetchWaterNews(page = 1, pageSize = 20): Promise<NewsArtic
     }
     
     // Fallback to NewsAPI if available
-    const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY || '';
+    const apiKey = process.env.NEWS_API_KEY || process.env.NEXT_PUBLIC_NEWS_API_KEY || '';
     if (apiKey) {
       const query = 'water OR water resources OR ecology OR environmental protection OR climate change';
       const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
@@ -153,19 +154,31 @@ async function fetchWaterNewsRSS(page = 1, pageSize = 20): Promise<NewsArticle[]
     if (!response.ok) throw new Error('RSS fetch error');
     
     const text = await response.text();
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(text, 'text/xml');
-    
-    const items = xml.querySelectorAll('item');
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+      attributeNamePrefix: '',
+    });
+    const xml = parser.parse(text);
+    const itemsRaw = xml?.rss?.channel?.item ?? [];
+    const items = Array.isArray(itemsRaw) ? itemsRaw : [itemsRaw];
     const articles: NewsArticle[] = [];
-    
+
+    const normalizeText = (value: unknown): string => {
+      if (typeof value === 'string') return value;
+      if (value && typeof value === 'object' && '#text' in value) {
+        const textValue = (value as { '#text'?: unknown })['#text'];
+        return typeof textValue === 'string' ? textValue : '';
+      }
+      return '';
+    };
+
     items.forEach((item, index) => {
-      if (index >= pageSize) return;
-      const title = item.querySelector('title')?.textContent || '';
-      const description = item.querySelector('description')?.textContent || '';
-      const link = item.querySelector('link')?.textContent || '';
-      const pubDate = item.querySelector('pubDate')?.textContent || '';
-      
+      if (!item || index >= pageSize) return;
+      const title = normalizeText(item.title);
+      const description = normalizeText(item.description);
+      const link = normalizeText(item.link);
+      const pubDate = normalizeText(item.pubDate);
+
       articles.push({
         id: `rss-${Date.now()}-${index}`,
         title,

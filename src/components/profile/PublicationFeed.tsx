@@ -42,6 +42,45 @@ export default function PublicationFeed({ publications }: PublicationFeedProps) 
     }
   };
 
+  const renderAttachments = (attachments?: any[]) => {
+    if (!attachments || attachments.length === 0) return null;
+    return (
+      <div className="mt-3 space-y-2">
+        {attachments.map((attachment, index) => {
+          const url = attachment?.url as string;
+          const type = attachment?.type as string;
+          const title = attachment?.title as string;
+          if (!url) return null;
+          if (type === 'image') {
+            return (
+              <div key={`${url}-${index}`} className="rounded-xl overflow-hidden">
+                <img src={url} alt={title || 'Attachment'} className="w-full h-auto" />
+              </div>
+            );
+          }
+          if (type === 'video') {
+            return (
+              <div key={`${url}-${index}`} className="rounded-xl overflow-hidden">
+                <video src={url} controls className="w-full h-auto" />
+              </div>
+            );
+          }
+          return (
+            <a
+              key={`${url}-${index}`}
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-cyan-glow hover:underline break-all"
+            >
+              {title || url}
+            </a>
+          );
+        })}
+      </div>
+    );
+  };
+
   if (publications.length === 0) {
     return (
       <div className="text-center py-12">
@@ -127,6 +166,8 @@ export default function PublicationFeed({ publications }: PublicationFeedProps) 
                   ))}
                 </div>
               )}
+
+              {renderAttachments(publication.attachments)}
 
               {/* Footer */}
               <div className="flex items-center gap-6 pt-4 border-t border-white/10">

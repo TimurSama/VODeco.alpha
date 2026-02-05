@@ -3,7 +3,7 @@
 ## Current Data Sources
 
 ### 1. Database (Primary)
-- **Source**: SQLite (dev) / PostgreSQL (prod)
+- **Source**: PostgreSQL
 - **Data**: User-generated water resources, projects, staking data
 - **Update**: Real-time via Prisma ORM
 

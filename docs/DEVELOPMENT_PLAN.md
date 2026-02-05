@@ -363,6 +363,8 @@ model AirdropDistribution {
 
 ### 6.1 Tokenomics-Based Calculations
 
+Примечание: в MVP все вознаграждения рассчитываются в **VOD credits** (pre‑sensor режим).
+
 #### Total Airdrop Pool
 - Allocate 5-10% of total supply for airdrops
 - Distribute over 12-24 months
@@ -514,26 +516,25 @@ First submission: +10 VOD bonus
 
 ### 10.1 Roadmap Structure
 
-#### Phase 1: Foundation (Months 0-6)
+#### Phase 1: Pre‑Sensor & Pilot (Months 0-9)
 - MVP completion
-- Core features
-- User base: 1,000-5,000
-- Token launch preparation
+- VOD credits (pre‑sensor) + TokenHub
+- IoT sensor R&D funding
+- Pilot data validation framework
 
-#### Phase 2: Growth (Months 6-18)
-- DAO implementation
-- Digital twins
-- Regional expansion (3-5 regions)
-- User base: 10,000-50,000
-- Token listing (DEX)
+#### Phase 2: Data Anchoring & Mint (Months 9-24)
+- Sensor prototype & pilot deployment
+- IoT oracle + verification pipeline
+- Water index governance v1
+- WTR minting on verified data
+- DAO implementation (initial)
 
-#### Phase 3: Scale (Months 18-36)
+#### Phase 3: Scale & Institutional (Months 24-48)
+- Mass sensor manufacturing
+- Global water data coverage
 - Full DAO governance
-- Infrastructure projects
-- Station construction/modernization
-- Global expansion
-- User base: 100,000+
-- Token listing (CEX)
+- Institutional partnerships
+- Ecosystem expansion
 
 ### 10.2 Visual Elements
 - Interactive timeline
@@ -582,11 +583,14 @@ First submission: +10 VOD bonus
 
 ### 12.1 Calculations Module
 - Extend `src/lib/tokenomics/calculations.ts`
+- Add pre‑sensor credits vs water‑mint mode switch
 - Add reward calculation functions
 - Add airdrop distribution logic
 - Add level/XP calculations
 
 ### 12.2 Integration Points
+- VOD credits (pre‑sensor) accounting
+- WTR minting on verified data
 - All reward distributions
 - Staking calculations
 - User level progression
@@ -678,6 +682,41 @@ SOCIAL_VERIFICATION_ENABLED=true
 - Profile & Library: 1.5 weeks
 - Roadmap: 1 week
 - Testing & Polish: 1-2 weeks
+
+---
+
+## План оставшихся доработок до релизной v1 (первые пользователи и инвесторы)
+
+### 1) Конверсионные цепочки и рост
+- Сквозная аналитика: view → click → submit для CTA, партнёрских/инвесторских форм, токен‑покупки.
+- UTM‑стандарты на всех ключевых CTA.
+- Мини‑воронки: аирдроп, рефералы, миссии, social‑share.
+- Метрики (DAU/MAU, регистрации, конверсии, CAC/CR) и недельные отчёты.
+
+### 2) Достоверность данных и витрина проектов
+- Проверка внешних источников (OSM/USGS/World Bank) и fallback‑сценариев.
+- Заполнение карточек объектов/субъектов воды (полные данные, связки).
+- Кейсы/витрина: 3–5 ключевых проектов с метриками результата.
+
+### 3) UX/UI релизного качества
+- Полировка форм (валидации, ошибки, подсказки).
+- Онбординг по ролям + минимальные туториалы.
+- Единый визуальный ритм блоков, пустые состояния, адаптив.
+
+### 4) Социальный слой и доверие
+- Модерация контента (posts/comments) и отчёты.
+- Трек достижений и репутации (XP/уровни) как «соц. доказательство».
+- Прозрачность токеномики (VOD → WTR) на ключевых страницах.
+
+### 5) Технический релиз‑контур
+- Миграции Prisma, `db push`, `generate`, smoke‑тесты API.
+- Мониторинг/логирование (Sentry/Logtail и аналоги).
+- Проверка прод‑сборки и производительности.
+
+### 6) Юридический минимум и инвест‑пакет
+- Уточнение Terms/Privacy/Disclaimer (юрист при необходимости).
+- Инвест‑лендинг: тезисы, traction‑метрики, use‑cases, CTA на форму.
+- Партнёрские офферы: форматы интеграций + SLA‑черновик.
 
 ---
 

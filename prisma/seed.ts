@@ -29,7 +29,7 @@ async function main() {
       name: 'Post-Quantum Blockchain Infrastructure',
       slug: 'post-quantum-blockchain',
       description: 'Разработка пост-квантовой блокчейн-технологии для безопасного управления водными ресурсами в эпоху квантовых вычислений',
-      fullDescription: 'Проект направлен на создание пост-квантовой криптографической блокчейн-системы, которая обеспечит безопасность данных о водных ресурсах и транзакций в эпоху квантовых вычислений. Система использует алгоритмы криптографии, устойчивые к атакам квантовых компьютеров, обеспечивая долгосрочную защиту критически важных данных о водных ресурсах. Проект включает разработку смарт-контрактов, интеграцию с IoT-сенсорами и создание децентрализованной сети валидаторов. Технология протестирована на 12 водоподготовительных станциях в Центральной Азии, показав 99.9% целостности данных и прозрачность в реальном времени.',
+      fullDescription: 'Проект направлен на создание пост-квантовой криптографической блокчейн-системы, которая обеспечит безопасность данных о водных ресурсах и транзакций в эпоху квантовых вычислений. Система использует алгоритмы криптографии, устойчивые к атакам квантовых компьютеров, обеспечивая долгосрочную защиту критически важных данных о водных ресурсах. Проект включает разработку смарт-контрактов, интеграцию с IoT-сенсорами и создание децентрализованной сети валидаторов. Пилотные тесты на водоподготовительных станциях запланированы после запуска сенсорной программы.',
       type: 'blockchain',
       status: 'active',
       targetAmount: "500000", // $500,000
@@ -59,7 +59,7 @@ async function main() {
       name: 'IoT Sensors Network with Blockchain Integration',
       slug: 'iot-sensors',
       description: 'Сеть IoT-сенсоров для анализа воды с прямой интеграцией в блокчейн',
-      fullDescription: 'Разработка и развертывание IoT-сенсоров, которые анализируют качество воды и отправляют данные напрямую в блокчейн-сеть, обеспечивая прозрачность и неизменность данных о водных ресурсах. Сенсоры измеряют pH, мутность, растворенный кислород, уровни загрязнителей и другие параметры в реальном времени. Данные автоматически записываются в блокчейн, создавая неизменяемый реестр качества воды. Сеть достигла 1 миллиона активных сенсоров в 150 странах, обнаружив более 500 инцидентов с качеством воды в 2026 году, что позволило быстро реагировать и предотвращать потенциальные кризисы в области здравоохранения.',
+      fullDescription: 'Разработка и развертывание IoT-сенсоров, которые анализируют качество воды и отправляют данные в блокчейн‑контур, обеспечивая прозрачность и неизменность данных о водных ресурсах. Сенсоры измеряют pH, мутность, растворенный кислород, уровни загрязнителей и другие параметры. Планируется поэтапный запуск: сначала пилотные партии и региональные испытания, затем масштабирование сети. Верифицированные данные станут основанием для data‑mint эмиссии WTR.',
       type: 'iot',
       status: 'active',
       targetAmount: "300000", // $300,000
@@ -70,11 +70,26 @@ async function main() {
         source: 'VOD Team',
         category: 'iot',
         progress: 25,
-        sensorsDeployed: 1000000,
-        countriesCovered: 150,
+        sensorsDeployed: 0,
+        sensorsPlanned: 1000000,
+        countriesCovered: 3,
         teamSize: 25,
         duration: '24 months',
         technologies: ['IoT', 'Blockchain', 'MQTT', 'LoRaWAN'],
+        verificationProtocol: [
+          'Измерение → калибровка → валидация',
+          'Подпись валидатора и хэш пакета',
+          'Запечатывание в ноды',
+          'Data‑mint WTR по подтверждённому объёму',
+        ],
+        dataSealing: 'Sensor → Gateway → Validation → Signature → Hash → Nodes → Data‑Mint',
+        sensorArchitecture: 'Sensor stack (pH/Turbidity/TDS/DO) → MCU → LoRaWAN/LTE‑M → Gateway → Nodes',
+        standardizationPlan: 'Единая спецификация сенсоров, формат данных и сертификация через международные организации.',
+        rAndDPlan: [
+          'Исследование и прототипы (1–2 мес)',
+          'Пилотная партия 300–1000 шт (4–6 мес)',
+          'Массовое производство 10k+ (6–12 мес)',
+        ],
         milestones: [
           { name: 'Sensor Development', completed: true, date: '2025-03-01' },
           { name: 'Blockchain Integration', completed: true, date: '2025-09-15' },
@@ -90,7 +105,7 @@ async function main() {
       name: 'VOD Check: Portable Water Analysis & Step & Earn',
       slug: 'research-equipment',
       description: 'Портативное устройство для анализа воды с программой вознаграждений',
-      fullDescription: 'Карманное устройство для анализа воды, которое подключается через Bluetooth к мобильному приложению. Пользователи могут анализировать качество воды и получать вознаграждения за вклад данных в платформу. Устройство измеряет ключевые параметры качества воды и автоматически синхронизирует данные с блокчейн-сетью VODeco. Программа Step & Earn поощряет гражданское участие, распределив более 50,000 портативных сенсоров среди волонтеров. Пользователи получают токены VOD за каждый анализ и вклад данных, создавая экономический стимул для гражданского мониторинга водных ресурсов.',
+      fullDescription: 'Карманное устройство для анализа воды, которое подключается через Bluetooth к мобильному приложению. Пользователи смогут анализировать качество воды и получать вознаграждения за вклад данных в платформу. Устройство измеряет ключевые параметры качества воды и синхронизирует данные с блокчейн‑контуром VODeco. Программа Step & Earn рассчитана на поэтапное распределение портативных сенсоров среди волонтеров после запуска производства.',
       type: 'research',
       status: 'active',
       targetAmount: "200000", // $200,000
@@ -101,11 +116,19 @@ async function main() {
         source: 'VOD Team',
         category: 'research',
         progress: 25,
-        devicesDistributed: 50000,
-        activeUsers: 35000,
+        devicesDistributed: 0,
+        devicesPlanned: 50000,
+        activeUsers: 0,
         teamSize: 15,
         duration: '12 months',
         technologies: ['Mobile App', 'Bluetooth', 'Water Sensors', 'Blockchain'],
+        verificationProtocol: [
+          'Локальная калибровка датчика',
+          'Пакетная валидация и подпись',
+          'Запись хэша в ноды',
+        ],
+        dataSealing: 'Portable sensor → Mobile app → Validation → Hash → Nodes',
+        standardizationPlan: 'Унификация протоколов измерений и формат данных для массового масштабирования.',
         milestones: [
           { name: 'Device Prototype', completed: true, date: '2025-02-15' },
           { name: 'App Development', completed: true, date: '2025-08-30' },
@@ -122,7 +145,7 @@ async function main() {
       name: 'Educational Programs: Children & Agriculture',
       slug: 'educational-programs',
       description: 'Образовательные программы для детей и обучение сельскохозяйственному орошению',
-      fullDescription: 'Комплексные образовательные программы, включающие внеклассные мероприятия для детей и специализированные программы обучения управлению сельскохозяйственным орошением. Программа VODeco Children\'s Water Education достигла 500,000 детей в 45 странах, используя геймификацию, интерактивные мастер-классы и практические эксперименты для обучения детей сохранению воды, мониторингу качества и защите окружающей среды. Программа включает мобильное приложение, где дети могут отслеживать свою деятельность по экономии воды и получать награды. Участники сообщили о 70% увеличении поведения по сохранению воды дома.',
+      fullDescription: 'Комплексные образовательные программы, включающие внеклассные мероприятия для детей и специализированные программы обучения управлению сельскохозяйственным орошением. Программа VODeco Children\'s Water Education нацелена на охват 500,000 детей в 45 странах, используя геймификацию, интерактивные мастер‑классы и практические эксперименты для обучения сохранению воды, мониторингу качества и защите окружающей среды. Программа включает мобильное приложение, где участники могут отслеживать свою деятельность по экономии воды и получать награды.',
       type: 'education',
       status: 'active',
       targetAmount: "150000", // $150,000
@@ -133,7 +156,8 @@ async function main() {
         source: 'VOD Team',
         category: 'education',
         progress: 25,
-        childrenReached: 500000,
+        childrenReached: 0,
+        childrenTarget: 500000,
         countries: 45,
         teamSize: 30,
         duration: '36 months',
@@ -153,7 +177,7 @@ async function main() {
       name: '12 Water Treatment Stations Complex in Uzbekistan',
       slug: 'uzbekistan-stations',
       description: 'Комплекс из 12 насосных и водоочистных станций в Узбекистане',
-      fullDescription: 'Модернизация и строительство 12 насосных и водоочистных станций по всему Узбекистану, улучшающая эффективность водоснабжения и цифровую трансформацию в соответствии с ЦУР ООН 6. Проект обеспечивает чистую питьевую воду более чем 2 миллионам человек в ранее недостаточно обслуживаемых регионах. Станции используют передовые технологии фильтрации и полностью интегрированы с системами мониторинга IoT. Качество воды улучшилось на 85% в целевых регионах, и проект создал более 1,200 местных рабочих мест. Проект финансируется через механизмы стейкинга VODeco и демонстрирует модель государственно-частного партнерства для устойчивого развития водной инфраструктуры.',
+      fullDescription: 'Модернизация и строительство 12 насосных и водоочистных станций по всему Узбекистану, направленная на повышение эффективности водоснабжения и цифровую трансформацию в соответствии с ЦУР ООН 6. Проект рассчитан на обеспечение чистой питьевой водой более 2 миллионов человек в ранее недостаточно обслуживаемых регионах. Планируется внедрение технологий фильтрации и интеграция с системами мониторинга IoT по мере развития сенсорной сети. Проект финансируется через механизмы стейкинга VODeco и демонстрирует модель государственно-частного партнерства для устойчивого развития водной инфраструктуры.',
       type: 'infrastructure',
       status: 'active',
       targetAmount: "7760600", // $7,760,600
@@ -467,8 +491,8 @@ async function main() {
     {
       slug: 'iot-sensors-global-deployment-2026',
       title: 'Global IoT Sensor Network Reaches 1 Million Active Sensors',
-      excerpt: 'The largest IoT network for water quality monitoring now covers 150 countries with real-time data streaming.',
-      content: 'The VODeco IoT sensor network has reached a major milestone with 1 million active sensors deployed worldwide. These sensors monitor water quality, flow rates, and environmental conditions in real-time, transmitting data directly to blockchain networks. The network has detected over 500 water quality incidents in 2026 alone, enabling rapid response and preventing potential health crises. The Step & Earn program has incentivized citizen participation, with over 50,000 portable sensors distributed to volunteers.',
+      excerpt: 'VODeco announces pilot IoT program and phased rollout of the sensor network.',
+      content: 'VODeco announced the launch of a phased IoT sensor pilot program for water quality monitoring. The plan includes prototype validation, regional pilots, and a staged manufacturing roadmap. The Step & Earn program will be activated after the first pilot batches are distributed, aligning incentives with verified data collection.',
       source: 'Environmental Technology Review',
       sourceUrl: 'https://example.com/iot-sensors-global',
       published: true,
@@ -479,8 +503,8 @@ async function main() {
     {
       slug: 'uzbekistan-water-stations-2026',
       title: '12 New Water Treatment Stations Operational in Uzbekistan',
-      excerpt: 'Major infrastructure project completes ahead of schedule, providing clean water to 2 million people.',
-      content: 'A comprehensive water infrastructure project in Uzbekistan has successfully completed with 12 new water treatment and pumping stations now operational. The project, funded through VODeco staking mechanisms, provides clean drinking water to over 2 million people in previously underserved regions. The stations use advanced filtration technology and are fully integrated with IoT monitoring systems. Water quality has improved by 85% in the target regions, and the project has created over 1,200 local jobs.',
+      excerpt: 'Infrastructure program progresses with phased construction and digital planning.',
+      content: 'A comprehensive water infrastructure program in Uzbekistan is progressing through phased construction and digital planning. The project aims to modernize 12 water treatment and pumping stations, improve access to clean water for underserved regions, and integrate IoT monitoring as the sensor network matures. Funding includes VODeco staking mechanisms and public-private partnerships.',
       source: 'Central Asia Infrastructure Report',
       sourceUrl: 'https://example.com/uzbekistan-stations',
       published: true,
@@ -502,9 +526,9 @@ async function main() {
     },
     {
       slug: 'children-water-education-2026',
-      title: 'Educational Program Reaches 500,000 Children Worldwide',
-      excerpt: 'Interactive water conservation education program teaches children about sustainable water management.',
-      content: 'The VODeco Children\'s Water Education Program has reached a major milestone, engaging over 500,000 children across 45 countries. The program uses gamification, interactive workshops, and hands-on experiments to teach children about water conservation, quality monitoring, and environmental protection. Participants have reported a 70% increase in water conservation behaviors at home. The program includes a mobile app where children can track their water-saving activities and earn rewards.',
+      title: 'Educational Program Scales Toward 500,000 Children',
+      excerpt: 'Interactive water conservation education program expands with phased rollout.',
+      content: 'The VODeco Children\'s Water Education Program is scaling toward a 500,000‑participant target across 45 countries. The program uses gamification, interactive workshops, and hands-on experiments to teach water conservation, quality monitoring, and environmental protection. A companion mobile app tracks activities and rewards participation.',
       source: 'Education for Sustainability',
       sourceUrl: 'https://example.com/children-education',
       published: true,
@@ -778,6 +802,14 @@ async function main() {
 
   // Create Achievements
   for (const achievement of missions.slice(6)) {
+    if (
+      typeof achievement.name !== 'string' ||
+      typeof achievement.description !== 'string' ||
+      typeof achievement.category !== 'string' ||
+      typeof achievement.points !== 'number'
+    ) {
+      continue;
+    }
     await prisma.achievement.upsert({
       where: { name: achievement.name },
       update: {},

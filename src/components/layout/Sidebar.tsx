@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, User, Wallet, LayoutDashboard, Newspaper, Briefcase, MessageCircle, Users, UserPlus, Settings, Globe, BookOpen, Target, Map } from 'lucide-react';
+import { X, Home, User, Wallet, LayoutDashboard, Newspaper, Briefcase, MessageCircle, Users, UserPlus, Settings, Globe, BookOpen, Target, Map, Handshake, Banknote, Coins, Gift, Share2, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/lib/i18n/context';
@@ -30,6 +30,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         { icon: Globe, label: t('menu.overview'), href: '/overview' },
         { icon: BookOpen, label: t('menu.whitepaper'), href: '/whitepaper' },
         { icon: Map, label: 'Roadmap', href: '/roadmap' },
+        { icon: Users, label: 'Сообщество', href: '/community' },
       ],
     },
     {
@@ -51,6 +52,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     {
       title: t('menu.social'),
       items: [
+        { icon: MessageCircle, label: 'Feed', href: '/feed' },
         { icon: MessageCircle, label: t('menu.chats'), href: '/chats' },
         { icon: Users, label: t('menu.friends'), href: '/friends' },
         { icon: UserPlus, label: t('menu.groups'), href: '/groups' },
@@ -60,6 +62,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       title: t('menu.settings'),
       items: [
         { icon: Settings, label: t('menu.settings'), href: '/settings' },
+        { icon: FileText, label: 'Terms', href: '/terms' },
+        { icon: FileText, label: 'Privacy', href: '/privacy' },
+        { icon: FileText, label: 'Disclaimer', href: '/disclaimer' },
+      ],
+    },
+    {
+      title: 'Рост',
+      items: [
+        { icon: Handshake, label: 'Партнёры', href: '/partners' },
+        { icon: Banknote, label: 'Инвесторы', href: '/investors' },
+        { icon: Coins, label: 'Покупка токенов', href: '/token-sale' },
+        { icon: Handshake, label: 'Для партнёров', href: '/for-partners' },
+        { icon: Banknote, label: 'Для инвесторов', href: '/for-investors' },
+        { icon: Gift, label: 'Airdrop', href: '/airdrop' },
+        { icon: Users, label: 'Рефералы', href: '/referrals' },
+        { icon: Share2, label: 'Social Share', href: '/social-share' },
       ],
     },
   ];

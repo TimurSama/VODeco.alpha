@@ -9,6 +9,7 @@ import MapView from './MapView';
 import { WaterResource } from '@/lib/api/water-resources';
 import { Globe, Satellite, Activity, Zap, Map, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackEvent } from '@/lib/analytics';
 
 interface Globe3DProps {
   waterResources: WaterResource[];
@@ -56,12 +57,45 @@ function CameraController({
   return null;
 }
 
+function FocusController({
+  focusTarget,
+  focusPosition,
+  controlsRef,
+  onArrive,
+}: {
+  focusTarget: THREE.Vector3 | null;
+  focusPosition: THREE.Vector3 | null;
+  controlsRef: React.MutableRefObject<any>;
+  onArrive: () => void;
+}) {
+  const { camera } = useThree();
+
+  useFrame(() => {
+    if (!focusTarget || !focusPosition) return;
+    const controls = controlsRef.current;
+    camera.position.lerp(focusPosition, 0.08);
+    if (controls?.target) {
+      controls.target.lerp(focusTarget, 0.08);
+      controls.update();
+    }
+    if (camera.position.distanceTo(focusPosition) < 0.03) {
+      onArrive();
+    }
+  });
+
+  return null;
+}
+
 export default function Globe3D({ waterResources, onResourceClick }: Globe3DProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('standard');
   const [viewType, setViewType] = useState<ViewType>('globe');
   const [isRotating, setIsRotating] = useState(true);
   const [cameraDistance, setCameraDistance] = useState(5.5);
+  const [selectedResource, setSelectedResource] = useState<WaterResource | null>(null);
+  const [focusTarget, setFocusTarget] = useState<THREE.Vector3 | null>(null);
+  const [focusPosition, setFocusPosition] = useState<THREE.Vector3 | null>(null);
   const controlsRef = useRef<any>(null);
+  const selectedResourceRef = useRef<WaterResource | null>(null);
 
   const viewModes: Array<{ id: ViewMode; label: string; icon: typeof Globe; color: string }> = [
     { id: 'standard', label: 'Стандарт', icon: Globe, color: 'cyan' },
@@ -82,8 +116,62 @@ export default function Globe3D({ waterResources, onResourceClick }: Globe3DProp
     }
   }, [viewType]);
 
+  const getGlobeCoords = (lat: number, lon: number, radius = 2): THREE.Vector3 => {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lon + 180) * (Math.PI / 180);
+    const x = -(radius * Math.sin(phi) * Math.cos(theta));
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const y = radius * Math.cos(phi);
+    return new THREE.Vector3(x, y, z);
+  };
+
+  const getMapCoords = (lat: number, lon: number, radius = 2): THREE.Vector3 => {
+    const x = (lon / 180) * radius;
+    const y = (Math.log(Math.tan((90 + lat) * Math.PI / 360)) / Math.PI) * radius;
+    return new THREE.Vector3(x, -y, 0.01);
+  };
+
+  const focusOnResource = (resource: WaterResource, nextViewType = viewType) => {
+    if (!resource) return;
+    setIsRotating(false);
+    const target =
+      nextViewType === 'map'
+        ? getMapCoords(resource.latitude, resource.longitude)
+        : getGlobeCoords(resource.latitude, resource.longitude, 2.01);
+    const position =
+      nextViewType === 'map'
+        ? new THREE.Vector3(target.x, 2.4, 0.01)
+        : target.clone().normalize().multiplyScalar(3.2);
+
+    setFocusTarget(target);
+    setFocusPosition(position);
+  };
+
+  useEffect(() => {
+    if (!selectedResource) return;
+    focusOnResource(selectedResource, viewType);
+  }, [viewType, selectedResource]);
+
+  const handleResourceClick = (resource: WaterResource) => {
+    selectedResourceRef.current = resource;
+    setSelectedResource(resource);
+    onResourceClick(resource);
+    focusOnResource(resource, viewType);
+    trackEvent('globe_resource_click', {
+      resourceId: resource.id,
+      type: resource.type,
+      category: resource.category,
+      viewType,
+    });
+  };
+
+  const setViewTypeWithTrack = (next: ViewType, source: 'manual' | 'auto') => {
+    setViewType(next);
+    trackEvent('globe_view_toggle', { viewType: next, source });
+  };
+
   const toggleViewType = () => {
-    setViewType(prev => prev === 'globe' ? 'map' : 'globe');
+    setViewTypeWithTrack(viewType === 'globe' ? 'map' : 'globe', 'manual');
   };
 
   return (
@@ -106,14 +194,15 @@ export default function Globe3D({ waterResources, onResourceClick }: Globe3DProp
             <Earth 
               key="earth"
               waterResources={waterResources} 
-              onResourceClick={onResourceClick}
+              onResourceClick={handleResourceClick}
               mode={viewMode}
+              isRotating={isRotating}
             />
           ) : (
             <MapView
               key="map"
               waterResources={waterResources}
-              onResourceClick={onResourceClick}
+              onResourceClick={handleResourceClick}
               mode={viewMode}
             />
           )}
@@ -129,12 +218,21 @@ export default function Globe3D({ waterResources, onResourceClick }: Globe3DProp
           autoRotate={isRotating && viewType === 'globe'}
           autoRotateSpeed={0.5}
           onStart={() => setIsRotating(false)}
-          onEnd={() => setIsRotating(true)}
+          onEnd={() => setIsRotating(selectedResourceRef.current ? false : true)}
         />
         
         <CameraController 
           onZoomChange={setCameraDistance}
-          onViewTypeChange={setViewType}
+          onViewTypeChange={(next) => setViewTypeWithTrack(next, 'auto')}
+        />
+        <FocusController
+          focusTarget={focusTarget}
+          focusPosition={focusPosition}
+          controlsRef={controlsRef}
+          onArrive={() => {
+            setFocusTarget(null);
+            setFocusPosition(null);
+          }}
         />
       </Canvas>
 
@@ -167,7 +265,10 @@ export default function Globe3D({ waterResources, onResourceClick }: Globe3DProp
           return (
             <button
               key={mode.id}
-              onClick={() => setViewMode(mode.id)}
+              onClick={() => {
+                setViewMode(mode.id);
+                trackEvent('globe_mode_change', { mode: mode.id });
+              }}
               className={`
                 flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider
                 transition-all duration-200 active:scale-95

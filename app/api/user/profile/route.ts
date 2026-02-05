@@ -116,6 +116,8 @@ export async function GET(request: NextRequest) {
         lastName: userData.lastName,
         avatar: userData.avatar,
         bio: userData.bio,
+        role: userData.role,
+        onboardingCompleted: userData.onboardingCompleted,
         verified: userData.verified,
         createdAt: userData.createdAt,
       },
@@ -153,5 +155,56 @@ export async function GET(request: NextRequest) {
       { error: 'Failed to fetch profile' },
       { status: 500 }
     );
+  }
+}
+
+/**
+ * PATCH /api/user/profile
+ * Update role/onboarding fields
+ */
+export async function PATCH(request: NextRequest) {
+  try {
+    const authResult = await requireAuth(request);
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+    const { user } = authResult;
+    const body = await request.json();
+    const role = typeof body?.role === 'string' ? body.role : null;
+    const onboardingCompleted =
+      typeof body?.onboardingCompleted === 'boolean' ? body.onboardingCompleted : null;
+
+    const allowedRoles = [
+      'activist',
+      'researcher',
+      'engineer',
+      'investor',
+      'company',
+      'ngo',
+      'government',
+      'institution',
+    ];
+
+    if (role && !allowedRoles.includes(role)) {
+      return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: user.userId },
+      data: {
+        ...(role ? { role } : {}),
+        ...(onboardingCompleted !== null ? { onboardingCompleted } : {}),
+      },
+      select: {
+        id: true,
+        role: true,
+        onboardingCompleted: true,
+      },
+    });
+
+    return NextResponse.json({ user: updated });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
   }
 }

@@ -3,7 +3,7 @@
 ## Current Data Sources
 
 ### 1. Internal Database (Primary)
-- **Type**: SQLite (dev) / PostgreSQL (prod)
+- **Type**: PostgreSQL
 - **Data**: User-generated water resources, projects, staking, news
 - **Update**: Real-time via Prisma ORM
 - **Endpoints**: `/api/water-resources`, `/api/projects`, `/api/news`, `/api/wallet`
@@ -47,7 +47,7 @@
 - **URL**: `https://newsapi.org/v2/everything`
 - **Query**: `q=water OR ecology OR environment`
 - **Status**: ✅ Integrated in `src/lib/api/water-data-sources.ts`
-- **API Key**: Set `NEXT_PUBLIC_NEWS_API_KEY` in `.env`
+- **API Key**: Set `NEWS_API_KEY` in `.env`
 
 #### Google News RSS
 - **URL**: `https://news.google.com/rss/search`
@@ -84,7 +84,7 @@
 
 Add to `.env.local`:
 ```env
-NEXT_PUBLIC_NEWS_API_KEY=your_newsapi_key_here
+NEWS_API_KEY=your_newsapi_key_here
 ```
 
 ## Data Caching

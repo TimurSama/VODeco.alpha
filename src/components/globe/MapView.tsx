@@ -143,12 +143,10 @@ export default function MapView({ waterResources, onResourceClick, mode = 'stand
                 <bufferGeometry>
                   <bufferAttribute
                     attach="attributes-position"
-                    count={2}
-                    array={new Float32Array([
+                    args={[new Float32Array([
                       position.x, position.y, position.z,
                       position.x, position.y, 0
-                    ])}
-                    itemSize={3}
+                    ]), 3]}
                   />
                 </bufferGeometry>
                 <lineBasicMaterial color={color} opacity={0.5} transparent />

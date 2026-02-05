@@ -17,6 +17,7 @@ import {
   Landmark,
   Wallet,
   TrendingUp,
+  Users,
 } from 'lucide-react';
 import {
   calculatePurchaseValue,
@@ -32,7 +33,17 @@ import {
 
 type IconComponent = React.ComponentType<{ className?: string }>;
 
-type DocKey = 'index' | 'mission' | 'tokenomics' | 'mvpMap' | 'spec';
+type DocKey =
+  | 'index'
+  | 'mission'
+  | 'tokenomics'
+  | 'mvpMap'
+  | 'spec'
+  | 'waterIndex'
+  | 'iotProtocol'
+  | 'roles'
+  | 'funnels'
+  | 'ux';
 
 const CANON_DOCS: Record<DocKey, { title: string; file: string; icon: IconComponent }> = {
   index: { title: 'Индекс канона', file: 'VODeco_Canon/00_INDEX.md', icon: FileText },
@@ -40,6 +51,11 @@ const CANON_DOCS: Record<DocKey, { title: string; file: string; icon: IconCompon
   tokenomics: { title: 'Токеномика и экономика', file: 'VODeco_Canon/05_Токеномика_и_экономика.md', icon: TrendingUp },
   mvpMap: { title: 'Карта реализации MVP', file: 'VODeco_Canon/09_Текущая_реализация_MVP_карта.md', icon: Database },
   spec: { title: 'Спецификация интерактивного WhitePaper', file: 'VODeco_Canon/11_Спецификация_интерактивного_WhitePaper.md', icon: Layers },
+  waterIndex: { title: 'Формула W_m3', file: 'VODeco_Canon/12_Формула_индекса_стоимости_воды_Wm3.md', icon: Calculator },
+  iotProtocol: { title: 'IoT протокол и стандарты', file: 'VODeco_Canon/13_IoT_сенсоры_верификация_и_стандарты.md', icon: Shield },
+  roles: { title: 'Роли и требования', file: 'VODeco_Canon/14_Роли_и_требования_пользователей.md', icon: Users },
+  funnels: { title: 'Воронки и партнёрства', file: 'VODeco_Canon/15_Воронки_продаж_и_партнерств.md', icon: TrendingUp },
+  ux: { title: 'UX/UI архитектура', file: 'VODeco_Canon/16_UX_UI_архитектура.md', icon: Layers },
 };
 
 type Project = {
@@ -366,16 +382,16 @@ export default function WhitePaperPage() {
             >
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="glass p-4 rounded-xl">
-                  <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Текущая цена (MVP)</div>
+                  <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Индексная цена (MVP кредиты)</div>
                   <div className="text-2xl font-black text-cyan-glow">{formatCurrency(CURRENT_TOKEN_PRICE)}</div>
                   <div className="text-sm text-slate-400 mt-1">
-                    Скидка: {(CURRENT_DISCOUNT * 100).toFixed(0)}% • Полная: {formatCurrency(FULL_TOKEN_PRICE)}
+                    Скидка: {(CURRENT_DISCOUNT * 100).toFixed(0)}% • Базовая: {formatCurrency(FULL_TOKEN_PRICE)}
                   </div>
                 </div>
                 <div className="glass p-4 rounded-xl">
-                  <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Supply (MVP)</div>
+                  <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Supply (MVP кредиты)</div>
                   <div className="text-2xl font-black text-emerald-glow">{TOTAL_SUPPLY.toLocaleString('en-US')} VOD</div>
-                  <div className="text-sm text-slate-400 mt-1">Для прототипа интерфейсов и калькуляторов.</div>
+                  <div className="text-sm text-slate-400 mt-1">Только для прототипа. Реальная эмиссия — после IoT‑верификации.</div>
                 </div>
                 <div className="glass p-4 rounded-xl">
                   <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Live-данные</div>
@@ -424,6 +440,15 @@ export default function WhitePaperPage() {
                     </li>
                     <li>
                       <span className="font-semibold">Науке</span>: доступ к данным, модели, экспертная верификация.
+                    </li>
+                    <li>
+                      <span className="font-semibold">Инженерам</span>: пилоты сенсоров, стандарты измерений, R&D.
+                    </li>
+                    <li>
+                      <span className="font-semibold">Компаниям</span>: ESG‑отчётность, корпоративные проекты, устойчивость.
+                    </li>
+                    <li>
+                      <span className="font-semibold">Международным организациям</span>: аудит, координация программ, SDG‑эффекты.
                     </li>
                   </ul>
                 </div>
@@ -596,12 +621,16 @@ export default function WhitePaperPage() {
                 <div className="glass p-4 rounded-xl">
                   <div className="font-bold text-white mb-2">Фазы (упрощённо)</div>
                   <ol className="text-sm text-slate-300 space-y-2 list-decimal list-inside">
+                    <li>Pre‑sensor Credits (VOD — внутриигровые расчёты)</li>
                     <li>Access & Participation</li>
                     <li>Staking & Governance / TokenHub</li>
                     <li>Data Anchoring (верификация → хэш → on-chain)</li>
                     <li>Resource-Linked (смарт-контракты объектов/данных)</li>
                   </ol>
                 </div>
+              </div>
+              <div className="mt-4 text-sm text-slate-300">
+                Базовая единица стоимости — индекс `W_m3` (средняя стоимость 1 м³ воды). Детальная формула — в каноне.
               </div>
             </Section>
 
@@ -614,9 +643,9 @@ export default function WhitePaperPage() {
               <div className="grid lg:grid-cols-3 gap-4">
                 <div className="glass p-4 rounded-xl">
                   <div className="font-bold text-white mb-3 flex items-center gap-2">
-                    <Wallet className="w-4 h-4 text-cyan-glow" /> Покупка токенов
+                    <Wallet className="w-4 h-4 text-cyan-glow" /> Покупка VOD credits
                   </div>
-                  <label className="text-xs text-slate-500 uppercase tracking-widest font-bold">Сумма (USD)</label>
+                  <label className="text-xs text-slate-500 uppercase tracking-widest font-bold">Сумма (VOD credits)</label>
                   <input
                     type="number"
                     value={buyUsd}
@@ -731,7 +760,7 @@ export default function WhitePaperPage() {
               </div>
 
               <div className="mt-4 text-xs text-slate-500">
-                Примечание: это MVP‑калькуляторы (прототип). Целевая tokenomics v2 описана в каноне и должна быть переключаемым режимом на следующем этапе.
+                Примечание: это MVP‑калькуляторы (прототип). Канон задаёт переход от pre‑sensor VOD credits к water‑mint WTR после верификации данных.
               </div>
             </Section>
 

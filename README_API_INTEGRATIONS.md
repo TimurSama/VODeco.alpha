@@ -70,7 +70,7 @@ GET /api/news?page=1&pageSize=20
 ## Environment Variables
 
 ```env
-NEXT_PUBLIC_NEWS_API_KEY=your_newsapi_key_here  # Optional, for NewsAPI
+NEWS_API_KEY=your_newsapi_key_here  # Optional, for NewsAPI
 ```
 
 ## Error Handling

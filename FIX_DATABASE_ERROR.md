@@ -118,7 +118,7 @@ vercel exec "npx prisma migrate deploy"
 
 **Для продакшена обязательно нужна PostgreSQL база данных!**
 
-SQLite (`file:./dev.db`) работает только локально, для Vercel нужен PostgreSQL.
+Проект настроен на PostgreSQL. SQLite больше не поддерживается для деплоя.
 
 ---
 

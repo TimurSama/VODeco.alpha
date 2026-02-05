@@ -45,13 +45,13 @@ Environment: All
 ```
 **Формат:** `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`
 
-### 6. NEXT_PUBLIC_NEWS_API_KEY
+### 6. NEWS_API_KEY
 ```
-Key: NEXT_PUBLIC_NEWS_API_KEY
+Key: NEWS_API_KEY
 Value: [ваш ключ от newsapi.org]
 Environment: All
 ```
-**Опционально:** Только если используете NewsAPI
+**Опционально:** Только если используете NewsAPI (серверная переменная)
 
 ### 7. NODE_ENV
 ```
@@ -73,6 +73,7 @@ Environment: Production only
 | `NEXT_PUBLIC_APP_URL` | `https://vo-deco-alpha.vercel.app` | All |
 | `DATABASE_URL` | *(автоматически)* | All |
 | `TELEGRAM_BOT_TOKEN` | *(ваш токен)* | All |
+| `NEWS_API_KEY` | *(ваш ключ)* | All |
 | `NODE_ENV` | `production` | Production |
 
 ---

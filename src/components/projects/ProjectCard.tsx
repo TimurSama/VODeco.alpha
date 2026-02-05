@@ -39,8 +39,11 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
               {/* Source Badge */}
               {project.metadata && (() => {
                 try {
-                  const meta = JSON.parse(project.metadata);
-                  if (meta.source) {
+                  const meta =
+                    typeof project.metadata === 'string'
+                      ? JSON.parse(project.metadata)
+                      : project.metadata;
+                  if (meta?.source) {
                     const sourceColors: Record<string, string> = {
                       'VOD Team': 'bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50',
                       'Uzbekistan': 'bg-neon-green/20 text-neon-green border-neon-green/50',

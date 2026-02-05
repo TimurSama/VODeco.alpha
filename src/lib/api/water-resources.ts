@@ -28,53 +28,7 @@ export interface WaterResourceFilter {
   region?: string;
   minQuality?: number;
   status?: string;
-}
-
-/**
- * OpenStreetMap Overpass API client
- * Fetches water bodies (rivers, lakes, etc.)
- */
-export async function fetchOSMWaterBodies(
-  bbox?: [number, number, number, number] // [minLat, minLon, maxLat, maxLon]
-): Promise<WaterResource[]> {
-  try {
-    // Overpass API query for water bodies
-    const query = `
-      [out:json][timeout:25];
-      (
-        way["natural"="water"](${bbox ? `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}` : ''});
-        way["waterway"="river"](${bbox ? `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}` : ''});
-        way["waterway"="stream"](${bbox ? `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}` : ''});
-      );
-      out center meta;
-    `;
-
-    const response = await fetch('https://overpass-api.de/api/interpreter', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: query,
-    });
-
-    if (!response.ok) throw new Error('OSM API error');
-
-    const data = await response.json();
-    
-    return data.elements.map((element: any) => ({
-      id: `osm_${element.id}`,
-      name: element.tags?.name || 'Unnamed Water Body',
-      type: element.tags?.waterway === 'river' ? 'river' : 'lake',
-      category: 'source',
-      latitude: element.center?.lat || element.lat,
-      longitude: element.center?.lon || element.lon,
-      country: element.tags?.['addr:country'],
-      description: element.tags?.description,
-      status: 'active',
-      metadata: { osmId: element.id, tags: element.tags },
-    }));
-  } catch (error) {
-    console.error('Error fetching OSM water bodies:', error);
-    return [];
-  }
+  includeExternal?: boolean;
 }
 
 /**
@@ -91,6 +45,7 @@ export async function fetchWaterResources(
     if (filter?.region) params.append('region', filter.region);
     if (filter?.minQuality) params.append('minQuality', filter.minQuality.toString());
     if (filter?.status) params.append('status', filter.status);
+    if (filter?.includeExternal) params.append('external', 'true');
 
     const response = await fetch(`/api/water-resources?${params.toString()}`);
     if (!response.ok) throw new Error('Failed to fetch water resources');

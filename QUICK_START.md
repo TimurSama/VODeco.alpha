@@ -8,15 +8,10 @@ npm install
 ```
 
 ### 2. Настройка переменных окружения
-```bash
-# Скопируйте пример файла
-cp .env.example .env.local
-
-# Отредактируйте .env.local и добавьте:
-# - JWT_SECRET (минимум 32 символа, случайный)
-# - TELEGRAM_BOT_TOKEN (если используете Telegram auth)
-# - NEXT_PUBLIC_APP_URL (http://localhost:3000 для локальной разработки)
-```
+Создайте `.env.local` по списку из `ENV_VARIABLES_LIST.md` и укажите:
+- `JWT_SECRET` (минимум 32 символа, случайный)
+- `TELEGRAM_BOT_TOKEN` (если используете Telegram auth)
+- `NEXT_PUBLIC_APP_URL` (`http://localhost:3000` для локальной разработки)
 
 ### 3. Инициализация базы данных
 ```bash
@@ -57,7 +52,7 @@ npm run dev
 
 3. **Добавьте переменные окружения в Vercel**
    - Settings → Environment Variables
-   - Добавьте все переменные из `.env.example`
+   - Добавьте все переменные из `ENV_VARIABLES_LIST.md`
    - **Важно**: Создайте PostgreSQL базу данных в Vercel Storage
 
 4. **Деплой**
@@ -91,7 +86,7 @@ NEXT_PUBLIC_APP_URL=https://your-project.vercel.app
 
 # Опциональные
 TELEGRAM_BOT_TOKEN=ваш-токен-бота
-NEXT_PUBLIC_NEWS_API_KEY=ваш-ключ-newsapi
+NEWS_API_KEY=ваш-ключ-newsapi
 ```
 
 ---
