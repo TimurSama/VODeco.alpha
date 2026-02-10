@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Newspaper, Calendar, ExternalLink, RefreshCw, Filter, Search, TrendingUp, BarChart3 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/context';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import EmptyState from '@/components/shared/EmptyState';
 import { formatRelativeTime } from '@/lib/utils/format';
 
 interface NewsPost {
@@ -242,10 +243,29 @@ export default function NewsPage() {
       {/* News Grid */}
       <div className="container mx-auto px-4 pb-8">
         {filteredNews.length === 0 ? (
-          <div className="text-center py-20">
-            <Newspaper className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <p className="text-xl font-semibold text-slate-400">No news found</p>
-          </div>
+          <EmptyState
+            icon={Newspaper}
+            title="Новости не найдены"
+            description={
+              searchQuery || selectedCategory !== 'all'
+                ? `По вашим фильтрам ничего не найдено. Попробуйте изменить параметры поиска или категорию.`
+                : 'В данный момент нет новостей. Станьте первым, кто добавит новость!'
+            }
+            action={
+              searchQuery || selectedCategory !== 'all'
+                ? {
+                    label: 'Сбросить фильтры',
+                    onClick: () => {
+                      setSearchQuery('');
+                      setSelectedCategory('all');
+                    },
+                  }
+                : {
+                    label: 'Добавить новость',
+                    onClick: () => window.location.href = '/news/submit',
+                  }
+            }
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredNews.map((post, index) => (

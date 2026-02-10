@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/context';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import EmptyState from '@/components/shared/EmptyState';
 
 interface Mission {
   id: string;
@@ -184,13 +185,27 @@ export default function MissionsPage() {
       {/* Missions Grid */}
       <div className="container mx-auto px-4 pb-8">
         {filteredMissions.length === 0 ? (
-          <div className="text-center py-20">
-            <Target className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <p className="text-xl font-semibold text-slate-400">No missions found</p>
-            <p className="text-slate-500 mt-2">
-              Check back later for new opportunities
-            </p>
-          </div>
+          <EmptyState
+            icon={Target}
+            title="Миссии не найдены"
+            description={
+              searchQuery
+                ? `По запросу "${searchQuery}" ничего не найдено. Попробуйте изменить фильтры.`
+                : 'В данный момент нет активных миссий. Следите за обновлениями!'
+            }
+            action={
+              searchQuery
+                ? {
+                    label: 'Очистить фильтры',
+                    onClick: () => {
+                      setSearchQuery('');
+                      setSelectedType('all');
+                      setSelectedCategory('all');
+                    },
+                  }
+                : undefined
+            }
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredMissions.map((mission, index) => {

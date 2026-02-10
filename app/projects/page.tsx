@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n/context';
 import { fetchProjects, Project } from '@/lib/api/projects';
 import ProjectCard from '@/components/projects/ProjectCard';
+import EmptyState from '@/components/shared/EmptyState';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import Link from 'next/link';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Briefcase } from 'lucide-react';
 
 export default function ProjectsPage() {
   const { t } = useLanguage();
@@ -30,8 +32,11 @@ export default function ProjectsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
-        <div className="text-neon-cyan">{t('common.loading')}</div>
+      <div className="min-h-screen bg-ocean-deep flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          <p className="mt-4 text-slate-400">{t('common.loading')}</p>
+        </div>
       </div>
     );
   }
@@ -64,11 +69,23 @@ export default function ProjectsPage() {
           <p className="text-white/60">{t('projects.subtitle')}</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
-          ))}
-        </div>
+        {projects.length === 0 ? (
+          <EmptyState
+            icon={Briefcase}
+            title="Нет проектов"
+            description="Проекты появятся здесь после их добавления. Следите за обновлениями!"
+            action={{
+              label: 'Открыть WhitePaper',
+              onClick: () => window.location.href = '/whitepaper#economy',
+            }}
+          />
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project, index) => (
+              <ProjectCard key={project.id} project={project} index={index} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

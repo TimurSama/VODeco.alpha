@@ -62,6 +62,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       title: t('menu.settings'),
       items: [
         { icon: Settings, label: t('menu.settings'), href: '/settings' },
+        { icon: FileText, label: 'FAQ', href: '/faq' },
         { icon: FileText, label: 'Terms', href: '/terms' },
         { icon: FileText, label: 'Privacy', href: '/privacy' },
         { icon: FileText, label: 'Disclaimer', href: '/disclaimer' },

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { MessageCircle, Heart, Send, EyeOff, Search, Tag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import EmptyState from '@/components/shared/EmptyState';
 
 type FeedPost = {
   id: string;
@@ -304,6 +305,31 @@ export default function FeedPage() {
 
         {loading ? (
           <div className="text-slate-400">Загрузка…</div>
+        ) : posts.length === 0 ? (
+          <EmptyState
+            icon={MessageCircle}
+            title="Лента пуста"
+            description={
+              searchQuery || selectedType !== 'all' || selectedTag
+                ? 'По вашим фильтрам ничего не найдено. Попробуйте изменить параметры поиска.'
+                : 'В ленте пока нет публикаций. Станьте первым, кто поделится новостью или исследованием!'
+            }
+            action={
+              searchQuery || selectedType !== 'all' || selectedTag
+                ? {
+                    label: 'Сбросить фильтры',
+                    onClick: () => {
+                      setSearchQuery('');
+                      setSelectedType('all');
+                      setSelectedTag('');
+                    },
+                  }
+                : {
+                    label: 'Создать публикацию',
+                    onClick: () => window.location.href = '/profile',
+                  }
+            }
+          />
         ) : (
           <div className="space-y-4">
             {posts.map((post, index) => {

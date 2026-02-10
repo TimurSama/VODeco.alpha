@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/context';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import EmptyState from '@/components/shared/EmptyState';
 
 interface LibraryItem {
   id: string;
@@ -188,10 +189,27 @@ export default function LibraryPage() {
       {/* Library Grid */}
       <div className="container mx-auto px-4 pb-8">
         {items.length === 0 ? (
-          <div className="text-center py-20">
-            <BookOpen className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <p className="text-xl font-semibold text-slate-400">No items found</p>
-          </div>
+          <EmptyState
+            icon={BookOpen}
+            title="Библиотека пуста"
+            description={
+              searchQuery || selectedType !== 'all' || selectedCategory !== 'all'
+                ? 'По вашим фильтрам ничего не найдено. Попробуйте изменить параметры поиска.'
+                : 'В библиотеке пока нет материалов. Станьте первым, кто добавит исследование или статью!'
+            }
+            action={
+              searchQuery || selectedType !== 'all' || selectedCategory !== 'all'
+                ? {
+                    label: 'Сбросить фильтры',
+                    onClick: () => {
+                      setSearchQuery('');
+                      setSelectedType('all');
+                      setSelectedCategory('all');
+                    },
+                  }
+                : undefined
+            }
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((item, index) => {
