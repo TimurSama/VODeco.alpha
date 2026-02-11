@@ -46,7 +46,8 @@ export const socialShareSchema = z.object({
   platform: z.enum(['twitter', 'facebook', 'telegram', 'linkedin', 'instagram', 'vk']),
   postUrl: z.string().url('Некорректный URL поста'),
   newsPostId: z.string().optional(),
-  metadata: z.record(z.any()).optional(),
+  // Свободный объект метаданных с строковыми ключами
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 // Partner application validation
