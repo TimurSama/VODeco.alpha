@@ -98,5 +98,5 @@ export const stakingSchema = z.object({
 
 // Helper function to format validation errors
 export function formatValidationError(error: z.ZodError): string {
-  return error.errors.map((e) => e.message).join(', ');
+  return error.issues.map((e) => e.message).join(', ');
 }
