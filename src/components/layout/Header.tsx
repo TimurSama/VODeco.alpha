@@ -60,7 +60,9 @@ export default function Header() {
   return (
     <>
       <motion.header 
-        className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10"
+        className={`fixed top-0 left-0 right-0 z-50 neo-header transition-all duration-300 ${
+          scrolled ? 'neo-header-scrolled' : ''
+        }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}

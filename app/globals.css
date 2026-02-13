@@ -112,6 +112,7 @@
     8px 8px 16px var(--color-neo-shadow-dark),
     -8px -8px 16px var(--color-neo-shadow-light);
   transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .neo-card:hover {
@@ -119,6 +120,7 @@
     12px 12px 24px var(--color-neo-shadow-dark),
     -12px -12px 24px var(--color-neo-shadow-light);
   transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .neo-card-inset {
@@ -127,6 +129,7 @@
   box-shadow: 
     inset 8px 8px 16px var(--color-neo-shadow-dark),
     inset -8px -8px 16px var(--color-neo-shadow-light);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .neo-button {
@@ -136,12 +139,41 @@
     4px 4px 8px var(--color-neo-shadow-dark),
     -4px -4px 8px var(--color-neo-shadow-light);
   transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.neo-button:hover {
+  box-shadow: 
+    6px 6px 12px var(--color-neo-shadow-dark),
+    -6px -6px 12px var(--color-neo-shadow-light);
+  border-color: rgba(34, 211, 238, 0.2);
 }
 
 .neo-button:active {
   box-shadow: 
     inset 4px 4px 8px var(--color-neo-shadow-dark),
     inset -4px -4px 8px var(--color-neo-shadow-light);
+  transform: scale(0.98);
+}
+
+/* Neomorphism Header */
+.neo-header {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.neo-header-scrolled {
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Text Glow Effects */
