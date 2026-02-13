@@ -1,0 +1,113 @@
+/**
+ * Products data from documentation
+ */
+import type { ProductCardData } from '@/components/cards';
+
+export const products: ProductCardData[] = [
+  {
+    id: 'vod-check',
+    name: 'VOD Check',
+    description: 'Мобильное приложение для гражданского мониторинга и валидации данных воды',
+    type: 'Software',
+    status: 'development',
+    cost: '$40,000',
+    developmentTime: '4 месяца',
+    features: [
+      'Анализ качества воды',
+      'Геймификация и квесты',
+      'Валидация данных',
+      'Образовательные программы',
+      'Система наград',
+    ],
+  },
+  {
+    id: 'digital-twins',
+    name: 'Digital Twins Core',
+    description: 'Движок синхронизации данных блокчейна с 3D-моделями объектов',
+    type: 'Platform',
+    status: 'prototype',
+    cost: '$85,000',
+    developmentTime: '6 месяцев',
+    features: [
+      '3D модели объектов',
+      'Синхронизация с блокчейном',
+      'Реальное время',
+      'Визуализация данных',
+    ],
+  },
+  {
+    id: 'ai-analytics',
+    name: 'AI Analytics Engine',
+    description: 'Предиктивные модели для анализа дефицита и загрязнения воды',
+    type: 'Software',
+    status: 'development',
+    cost: '$120,000',
+    developmentTime: '8 месяцев',
+    features: [
+      'Предиктивная аналитика',
+      'ML модели',
+      'Анализ дефицита',
+      'Прогнозирование загрязнения',
+    ],
+  },
+  {
+    id: 'dao-governance',
+    name: 'DAO Governance Pro',
+    description: 'Система сложного голосования с делегированием и управлением казной',
+    type: 'Platform',
+    status: 'development',
+    cost: '$60,000',
+    developmentTime: '5 месяцев',
+    features: [
+      'Голосование',
+      'Делегирование',
+      'Управление казной',
+      'Аудит',
+    ],
+  },
+  {
+    id: 'educational-hub',
+    name: 'VOD Educational Hub',
+    description: 'Платформа для публикации исследований и распределения грантов',
+    type: 'Platform',
+    status: 'development',
+    cost: '$55,000',
+    developmentTime: '7 месяцев',
+    features: [
+      'Публикации исследований',
+      'Распределение грантов',
+      'Peer-review',
+      'Библиотека знаний',
+    ],
+  },
+  {
+    id: 'eco-gaming',
+    name: 'Eco-Gaming Module',
+    description: 'Игровые механики (квесты, NFT-награды) для вовлечения молодежи',
+    type: 'Software',
+    status: 'prototype',
+    cost: '$90,000',
+    developmentTime: '9 месяцев',
+    features: [
+      'Квесты и миссии',
+      'NFT награды',
+      'Геймификация',
+      'Социальные элементы',
+    ],
+  },
+  {
+    id: 'integration-sdk',
+    name: 'VOD Integration SDK',
+    description: 'Набор инструментов для подключения внешних IoT-систем и гос. реестров',
+    type: 'Software',
+    status: 'development',
+    cost: '$150,000',
+    developmentTime: '12 месяцев',
+    features: [
+      'API интеграции',
+      'SDK для разработчиков',
+      'Поддержка IoT',
+      'Интеграция с гос. системами',
+    ],
+  },
+];

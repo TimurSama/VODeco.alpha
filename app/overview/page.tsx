@@ -51,14 +51,14 @@ export default function OverviewPage() {
   };
 
   if (loading) {
-    return (
+  return (
       <div className="min-h-screen flex items-center justify-center bg-ocean-deep">
         <LoadingSpinner />
       </div>
     );
   }
 
-  return (
+              return (
     <div className="min-h-screen bg-ocean-deep relative">
       <AnimatePresence mode="wait">
         {currentScreen === 1 && (
@@ -128,8 +128,8 @@ export default function OverviewPage() {
       </AnimatePresence>
 
       {/* Progress Indicator */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-        <div className="glass-card px-6 py-3 flex items-center gap-4">
+      <div className="fixed bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4">
+        <div className="glass-card px-4 md:px-6 py-2 md:py-3 flex items-center gap-2 md:gap-4">
           <button
             onClick={handlePrev}
             disabled={currentScreen === 1}
@@ -137,7 +137,7 @@ export default function OverviewPage() {
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2 flex-1 justify-center">
             {Array.from({ length: totalScreens }).map((_, idx) => (
               <button
                 key={idx}
@@ -145,10 +145,10 @@ export default function OverviewPage() {
                   setCurrentScreen(idx + 1);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`w-2 h-2 rounded-full transition-all ${
+                className={`h-2 rounded-full transition-all ${
                   currentScreen === idx + 1
-                    ? 'bg-cyan-glow w-8'
-                    : 'bg-white/30 hover:bg-white/50'
+                    ? 'bg-cyan-glow w-6 md:w-8'
+                    : 'bg-white/30 hover:bg-white/50 w-2'
                 }`}
               />
             ))}
@@ -159,9 +159,9 @@ export default function OverviewPage() {
             className="p-2 neo-button rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+                </button>
+              </div>
+                </div>
     </div>
   );
 }

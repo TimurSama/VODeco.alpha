@@ -151,14 +151,14 @@ export default function OverviewScreen9({ onNext, onPrev }: OverviewScreen9Props
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-rose-glow/10 via-transparent to-cyan-glow/10" />
 
-      <div className="container mx-auto px-4 py-20 relative z-10">
+      <div className="container mx-auto px-4 py-12 md:py-20 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
         >
-          <h2 className="text-4xl lg:text-5xl font-black mb-4 gradient-text">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 gradient-text">
             Проблемы, которые мы решаем
           </h2>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
@@ -167,7 +167,7 @@ export default function OverviewScreen9({ onNext, onPrev }: OverviewScreen9Props
         </motion.div>
 
         {/* Problem Regions */}
-        <div className="space-y-8 mb-12">
+        <div className="space-y-6 md:space-y-8 mb-8 md:mb-12">
           {problemRegions.map((region, idx) => {
             const Icon = region.icon;
             return (

@@ -17,8 +17,8 @@ export default function OverviewScreen1({ onNext, waterResources }: OverviewScre
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-glow/10 via-transparent to-purple-glow/10" />
       
       {/* Content */}
-      <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-4 py-12 md:py-20 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left: Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -31,10 +31,10 @@ export default function OverviewScreen1({ onNext, waterResources }: OverviewScre
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <h1 className="text-5xl lg:text-6xl font-black mb-4 gradient-text">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 gradient-text">
                 VODeco
               </h1>
-              <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4">
                 Децентрализованная экосистема управления водными ресурсами
               </h2>
             </motion.div>
@@ -43,7 +43,7 @@ export default function OverviewScreen1({ onNext, waterResources }: OverviewScre
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-lg text-white/80 leading-relaxed"
+              className="text-base sm:text-lg text-white/80 leading-relaxed"
             >
               Токенизация участия и демократизация управления водными активами через интеграцию IoT, AI и Blockchain для обеспечения прозрачности и устойчивости.
             </motion.p>
@@ -85,7 +85,7 @@ export default function OverviewScreen1({ onNext, waterResources }: OverviewScre
             transition={{ duration: 1, delay: 0.3 }}
             className="relative"
           >
-            <div className="w-full h-[400px] lg:h-[500px] relative">
+            <div className="w-full h-[300px] sm:h-[400px] lg:h-[500px] relative">
               <div className="absolute inset-0 neo-card rounded-2xl overflow-hidden">
                 <Globe3D
                   waterResources={waterResources}
