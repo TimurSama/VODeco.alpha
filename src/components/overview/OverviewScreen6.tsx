@@ -31,7 +31,7 @@ export default function OverviewScreen6({ onNext, onPrev }: OverviewScreen6Props
           description: p.description || '',
           type: p.type || 'O-VOD',
           location: p.location || undefined,
-          irr: p.irr || undefined,
+          irr: p.irr ? parseFloat(p.irr) : undefined,
           targetAmount: p.targetAmount || undefined,
           currentAmount: p.currentAmount || undefined,
           status: 'active' as const,
