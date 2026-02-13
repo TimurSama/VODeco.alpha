@@ -23,7 +23,7 @@ export default function OverviewPage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const resources = await fetchWaterResources({ external: true });
+        const resources = await fetchWaterResources({ includeExternal: true });
         setWaterResources(resources);
       } catch (error) {
         console.error('Failed to load water resources:', error);
