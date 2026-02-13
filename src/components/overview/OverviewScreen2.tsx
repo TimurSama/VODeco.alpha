@@ -7,6 +7,12 @@ import AnimatedCounter from './AnimatedCounter';
 import { WaterResource } from '@/lib/api/water-resources';
 import { marketMetrics, problemMetrics, realTimeMetrics } from '@/lib/data/market-metrics';
 
+interface OverviewScreen2Props {
+  onNext: () => void;
+  onPrev: () => void;
+  waterResources: WaterResource[];
+}
+
 export default function OverviewScreen2({ onNext, onPrev, waterResources }: OverviewScreen2Props) {
   const [show2025, setShow2025] = useState(true);
   const [startAnimation, setStartAnimation] = useState(false);
