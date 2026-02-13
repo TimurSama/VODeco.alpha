@@ -59,71 +59,134 @@ export default function OverviewPage() {
   }
 
               return (
-    <div className="min-h-screen bg-ocean-deep relative">
-      <AnimatePresence mode="wait">
+    <div className="min-h-screen bg-ocean-deep relative overflow-x-hidden">
+      <AnimatePresence mode="wait" initial={false}>
         {currentScreen === 1 && (
-          <OverviewScreen1
+          <motion.div
             key="screen1"
-            onNext={handleNext}
-            waterResources={waterResources}
-          />
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen1
+              onNext={handleNext}
+              waterResources={waterResources}
+            />
+          </motion.div>
         )}
         {currentScreen === 2 && (
-          <OverviewScreen2
+          <motion.div
             key="screen2"
-            onNext={handleNext}
-            onPrev={handlePrev}
-            waterResources={waterResources}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen2
+              onNext={handleNext}
+              onPrev={handlePrev}
+              waterResources={waterResources}
+            />
+          </motion.div>
         )}
         {currentScreen === 3 && (
-          <OverviewScreen3
+          <motion.div
             key="screen3"
-            onNext={handleNext}
-            onPrev={handlePrev}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen3
+              onNext={handleNext}
+              onPrev={handlePrev}
+            />
+          </motion.div>
         )}
         {currentScreen === 4 && (
-          <OverviewScreen4
+          <motion.div
             key="screen4"
-            onNext={handleNext}
-            onPrev={handlePrev}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen4
+              onNext={handleNext}
+              onPrev={handlePrev}
+            />
+          </motion.div>
         )}
         {currentScreen === 5 && (
-          <OverviewScreen5
+          <motion.div
             key="screen5"
-            onNext={handleNext}
-            onPrev={handlePrev}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen5
+              onNext={handleNext}
+              onPrev={handlePrev}
+            />
+          </motion.div>
         )}
         {currentScreen === 6 && (
-          <OverviewScreen6
+          <motion.div
             key="screen6"
-            onNext={handleNext}
-            onPrev={handlePrev}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen6
+              onNext={handleNext}
+              onPrev={handlePrev}
+            />
+          </motion.div>
         )}
         {currentScreen === 7 && (
-          <OverviewScreen7
+          <motion.div
             key="screen7"
-            onNext={handleNext}
-            onPrev={handlePrev}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen7
+              onNext={handleNext}
+              onPrev={handlePrev}
+            />
+          </motion.div>
         )}
         {currentScreen === 8 && (
-          <OverviewScreen8
+          <motion.div
             key="screen8"
-            onNext={handleNext}
-            onPrev={handlePrev}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen8
+              onNext={handleNext}
+              onPrev={handlePrev}
+            />
+          </motion.div>
         )}
         {currentScreen === 9 && (
-          <OverviewScreen9
+          <motion.div
             key="screen9"
-            onNext={() => setCurrentScreen(1)}
-            onPrev={handlePrev}
-          />
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <OverviewScreen9
+              onNext={() => setCurrentScreen(1)}
+              onPrev={handlePrev}
+            />
+          </motion.div>
         )}
       </AnimatePresence>
 
