@@ -6,7 +6,6 @@ import InfoPopup from './InfoPopup';
 import {
   User,
   Building2,
-  Bank,
   Anchor,
   Handshake,
   ArrowRight,
@@ -95,7 +94,7 @@ const investmentOffers: InvestmentOffer[] = [
   },
   {
     id: 'bank',
-    icon: Bank,
+    icon: Building2,
     title: 'Для банка',
     minAmount: '$1,000,000',
     color: 'purple',
